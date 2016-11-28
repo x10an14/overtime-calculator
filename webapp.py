@@ -1,13 +1,97 @@
-from sanic import Sanic
+"""Webapp start-up python script for Overtime-Calculator."""
+import csv
+import logging
+from tempfile import SpooledTemporaryFile
+
+# PIP imports:
 from sanic.response import json
 
-app = Sanic("overtime-calculator")
+# Module imports:
+from src import app
 
 
-@app.route("/")
-async def test(request):
+@app.route("/hello")
+def test(request):
     return json({"hello": "world"})
 
 
+@app.route("/files")
+def post_json(request):
+
+    def get_file_data_from_request_as_dict(request_data):
+        return dict(
+            body=request_data.body,
+            name=request_data.name,
+            type=request_data.type, )
+
+    func = get_file_data_from_request_as_dict
+    files_parameters = [func(x) for x in request.files.keys()]
+
+    return_dict = dict(
+        received=True,
+        file_names=request.files.keys(),
+        test_file_parameters=files_parameters, )
+
+    return json(return_dict)
+
+
+@app.route("/rest_request")
+def return_rest_request(request):
+    return_dict = request
+    return json(return_dict)
+
+
+@app.route("/csv_upload")
+def calculate_csv(request):
+    from IPython import embed
+    print("Receiving a request to {}".format(request.url))
+
+    # uploaded_files = request.files.items()
+    print("Received the following files:")
+
+    files = request.files
+    print("\t#of files: {}, file_names: {}".format(
+        len(files),
+        [(x, y.name) for x, y in files.items()]))
+
+    # select one file of potentially more than one
+    keys = list(files.keys())
+    selected_key = keys[0]
+    if len(files) > 1:
+        # Necessary to support indexing
+        for key in keys:
+            if "csv" in key.lower():
+                selected_key = key
+
+    # input_file_name = files[selected_key].name
+    input_file_content = files[selected_key].body
+    input_file_content = input_file_content.decode('utf-8')
+    tempfile = SpooledTemporaryFile(
+        max_size=len(input_file_content),
+        mode="rw")
+
+    # save content to temporary file in memory (not disk)
+    length = tempfile.write(input_file_content)
+    if length == 0:
+        print("File ({}) received is empty.".files[selected_key].name)
+        return json(dict(response="no content in uploaded file"))
+
+    # Reset file-read
+    tempfile.seek(0)
+
+    # decide dialect:
+    dialect = csv.Sniffer().sniff(tempfile.read())
+    tempfile.seek(0)
+
+    # read csv
+    reader = csv.DictReader(tempfile, dialect=dialect)
+    parsed_content = list(reader)
+    print("#rows in csv_file: {}".format(len(parsed_content)))
+
+    # embed()
+
+    return json({"response": "ok", "csv_dialecet": dialect})
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8000)
+    app.run(host="127.0.0.1", port=8000)
