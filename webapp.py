@@ -1,6 +1,6 @@
 """Webapp start-up python script for Overtime-Calculator."""
 import csv
-import logging
+# import logging    # TODO: Implement logging...
 from tempfile import SpooledTemporaryFile
 
 # PIP imports:
@@ -8,15 +8,17 @@ from sanic.response import json
 
 # Module imports:
 from src import app
+from src import parse_csv_reader_content
+from src import parse_aggregate_weeks_and_weekdays
 
 
 @app.route("/hello")
-def test(request):
+def _test(request):
     return json({"hello": "world"})
 
 
 @app.route("/files")
-def post_json(request):
+def _post_json(request):
 
     def get_file_data_from_request_as_dict(request_data):
         return dict(
@@ -36,7 +38,7 @@ def post_json(request):
 
 
 @app.route("/rest_request")
-def return_rest_request(request):
+def _return_rest_request(request):
     return_dict = request
     return json(return_dict)
 
@@ -78,20 +80,34 @@ def calculate_csv(request):
 
     # Reset file-read
     tempfile.seek(0)
+    print("Content writtent to tempfile...")
 
     # decide dialect:
     dialect = csv.Sniffer().sniff(tempfile.read())
     tempfile.seek(0)
+    print("CSV dialect '{}' sniffed...".format(dialect))
 
-    # read csv
+    # read csv:
     reader = csv.DictReader(tempfile, dialect=dialect)
     parsed_content = list(reader)
     print("#rows in csv_file: {}".format(len(parsed_content)))
 
-    # embed()
+    print("Parsing time records...")
+    aggregate_records, overtime_records = parse_csv_reader_content(
+        csv_reader=parsed_content)
+    print("Parsing time records more deeply...")
+    aggregate_records = parse_aggregate_weeks_and_weekdays(
+        aggregate_data=aggregate_records)
+    print("Done parsing!")
 
-    return json({"response": "ok", "csv_dialecet": dialect})
+    return_dict = dict(
+        aggregate_records=aggregate_records,
+        overtime_records=overtime_records)
+
+    print("Returning parsed records.")
+    embed()
+    return json(dict(response="ok", return_dict=return_dict))
 
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=8000)
+    app.run(host="127.0.0.1", port=8000, debug=True)
