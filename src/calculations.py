@@ -8,7 +8,7 @@ from . import default_work_hours_in_week
 from . import log_function_entry_and_exit
 
 
-@log_function_entry_and_exit
+# @log_function_entry_and_exit
 def parse_row(row, datetime_parse_fmt=default_parse_fmt):
     # TODO: ADD DOCSTRING
 

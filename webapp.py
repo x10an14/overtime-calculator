@@ -1,7 +1,7 @@
 """Webapp start-up python script for Overtime-Calculator."""
 import csv
 import json
-import logging    # TODO: Implement logging...
+import logging
 from tempfile import SpooledTemporaryFile
 
 # PIP imports:
@@ -9,8 +9,8 @@ from sanic.response import json as sanicjson
 
 # Module imports:
 from src import app
-from src import logging_format
 from src import _serialize_json
+from src import default_parse_fmt
 from src import log_function_entry_and_exit
 from src.calculations import parse_csv_reader_content
 from src.calculations import parse_aggregate_weeks_and_weekdays
@@ -53,7 +53,7 @@ def _return_rest_request(request):
 @app.route("/csv_upload")
 @log_function_entry_and_exit
 def calculate_csv(request):
-    print("Receiving a request to {}".format(request.url))
+    logging.info("Receiving a request to {}".format(request.url))
 
     # uploaded_files = request.files.items()
     print("Received the following files:")
@@ -118,6 +118,12 @@ def calculate_csv(request):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.info)
-    logging.Formatter(logging_format)
-    app.run(host="127.0.0.1", port=8000, debug=True)
+    debug = True
+
+    logging_format = "%(asctime)s[%(process)d]%(levelname)s::%(module)s:%(lineno)d: "
+    logging.basicConfig(
+        level=logging.INFO,
+        format=logging_format,
+        datefmt=default_parse_fmt, )
+
+    app.run(host="127.0.0.1", port=8000, debug=debug)
