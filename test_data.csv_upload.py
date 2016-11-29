@@ -1,4 +1,5 @@
 """Small script to test uploading a .csv file."""
+import json
 from sys import argv
 
 # PIP imports:
@@ -16,4 +17,6 @@ if __name__ == '__main__':
     input_file = open(argv[1], "r")
     response = requests.post(request_url, files=dict(csv_file=input_file))
 
-    print(response.json())
+    json_data = response.json()
+    return_data = sorted(json.loads(json_data['return_dict']).items())
+    print(return_data)
