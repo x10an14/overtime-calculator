@@ -1,6 +1,8 @@
 """Base module containing the global app variable++."""
+from contextlib import ContextDecorator
 from datetime import datetime
 from datetime import timedelta
+import logging
 
 # PIP import:
 from sanic import Sanic
@@ -11,78 +13,81 @@ app = Sanic("overtime-calculator")
 default_parse_fmt = "%d-%m-%Y %H:%M:%S"
 default_work_hours_in_week = timedelta(hours=40)
 default_work_days = {"mon": 1, "tue": 2, "wed": 3, "thu": 4, "fri": 5}
+logging_format = "%(process)d [%(asctime)s] \
+%(levelname)s::%(module)s:%(lineno)d: "
 
 
-def parse_row(row, datetime_parse_fmt=default_parse_fmt):
-    # TODO: ADD DOCSTRING
-
-    # TODO: figure out which fields (if any) have datetime
-
-    # TODO: Replace these hardcoded field_names with names decided upon
-    #       through above todo.
-    start_field_name, stop_field_name = "First Check-In", "Last Check-Out"
-    start_time = datetime.strptime(row[start_field_name], default_parse_fmt)
-    stop_time = datetime.strptime(row[stop_field_name], default_parse_fmt)
-
-    duration = (stop_time - start_time)
-    return (duration, start_time.isocalendar())
+def _get_current_time_string(just_time_string=False):
+    if just_time_string:
+        return datetime.now().strftime(default_parse_fmt)
+    return datetime.now().strftime("[{}]: ".format(default_parse_fmt))
 
 
-def parse_csv_reader_content(csv_reader, work_days=default_work_days):
-    # TODO: ADD DOCSTRING
-    def help_func(nested_obj, first_key, second_key, new_val):
-        try:
-            nested_obj[first_key][second_key].append(new_val)
-        except KeyError as e:
-            if e.args[0] == first_key:
-                # if it's the first time we visit this week
-                nested_obj[first_key] = dict()
-                nested_obj[first_key][second_key] = [new_val]
-            if e.args[0] == second_key:
-                # If it's the first day we visit this day of this week
-                nested_obj[first_key][second_key] = [new_val]
-
-    total_sum = timedelta(0)
-    aggregate_records, overtime_records = dict(), dict()
-    for row in csv_reader:
-        (duration, (_, week_nr, week_day)) = parse_row(row)
-        total_sum += duration
-
-        if week_day not in work_days.values():
-            help_func(
-                nested_obj=overtime_records,
-                first_key=week_nr,
-                second_key=week_day,
-                new_val=duration)
-        else:
-            help_func(
-                nested_obj=aggregate_records,
-                first_key=week_nr,
-                second_key=week_day,
-                new_val=duration)
-
-    # add total sum to return object
-    aggregate_records["total_sum"] = total_sum
-
-    return aggregate_records, overtime_records
+# Primarily useful for debugging of json objects
+# which contain datetime.datetime objects.
+# http://stackoverflow.com/a/22238613
+#   More can be added over time...
+def _serialize_json(obj, time_format=None):
+    if isinstance(obj, datetime):
+        serialized = obj.strftime(
+            time_format if time_format is not None else default_parse_fmt)
+        return serialized
+    elif isinstance(obj, timedelta):
+        serialized = str(obj)
+        return serialized
+    elif isinstance(obj, tuple):
+        serialized = str(list(obj))
+        return serialized
+    elif isinstance(obj, set):
+        serialized = list(obj)
+        return serialized
+    raise TypeError
 
 
-def parse_aggregate_weeks_and_weekdays(aggregate_data, hours_per_week=default_work_hours_in_week):
-    # TODO: ADD DOCSTRING
-    total_balance = timedelta(0)
-    for week, days in aggregate_data.items():
-        if week == "total_sum":
-            continue
-        week_sum = timedelta(0)
-        for day, records in days.items():
-            if day == "balance":
-                continue
-            for record in records:
-                week_sum += record
-        week_balance = hours_per_week - week_sum
-        aggregate_data[week]["balance"] = week_balance
-        total_balance += week_balance
+def log_function_entry_and_exit(decorated_function):
+    """Function decorator logging entry + exit (as logging.info), and parameters (as logging.debug) of functions."""
+    from functools import wraps
 
-    total_balance = aggregate_data["total_sum"] - total_balance
-    aggregate_data["total_balance"] = total_balance
-    return aggregate_data
+    @wraps(decorated_function)
+    def wrapper(*dec_fn_args, **dec_fn_kwargs):
+        # Log function entry
+        func_name = decorated_function.__name__
+        log = logging.getLogger(func_name)
+        log.info('Entering {}()...'.format(func_name))
+
+        # get function params (args and kwargs)
+        arg_names = decorated_function.__code__.co_varnames
+        params = dict(
+            args=dict(zip(arg_names, dec_fn_args)),
+            kwargs=dec_fn_kwargs)
+
+        log.debug(
+            "\t" +
+            ', '.join([
+                '{}={}'.format(str(k), repr(v)) for k, v in params.items()]))
+        # Execute wrapped (decorated) function:
+        out = decorated_function(*dec_fn_args, **dec_fn_kwargs)
+        log.info('Done running {}()!'.format(func_name))
+
+        return out
+    return wrapper
+
+
+class TrackEntryAndExit(ContextDecorator):
+    """
+    A context manager and function decorator in-one for logging(!).
+
+    See https://docs.python.org/3/library/contextlib.html#using-a-context-manager-as-a-function-decorator
+    """
+
+    def __init__(self, name):
+        """Why is this doc-string required?..."""
+        self.name = name
+
+    def __enter__(self):
+        """Why is this doc-string required?..."""
+        logging.info(_get_current_time_string() + 'Entering: {}'.format(self.name))
+
+    def __exit__(self, exc_type, exc, exc_tb):
+        """Why is this doc-string required?..."""
+        logging.info(_get_current_time_string() + 'Exiting: {}'.format(self.name))

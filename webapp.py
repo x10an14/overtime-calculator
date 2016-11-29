@@ -1,23 +1,29 @@
 """Webapp start-up python script for Overtime-Calculator."""
 import csv
-# import logging    # TODO: Implement logging...
+import json
+import logging    # TODO: Implement logging...
 from tempfile import SpooledTemporaryFile
 
 # PIP imports:
-from sanic.response import json
+from sanic.response import json as sanicjson
 
 # Module imports:
 from src import app
-from src import parse_csv_reader_content
-from src import parse_aggregate_weeks_and_weekdays
+from src import logging_format
+from src import _serialize_json
+from src import log_function_entry_and_exit
+from src.calculations import parse_csv_reader_content
+from src.calculations import parse_aggregate_weeks_and_weekdays
 
 
 @app.route("/hello")
+@log_function_entry_and_exit
 def _test(request):
-    return json({"hello": "world"})
+    return sanicjson({"hello": "world"})
 
 
 @app.route("/files")
+@log_function_entry_and_exit
 def _post_json(request):
 
     def get_file_data_from_request_as_dict(request_data):
@@ -34,18 +40,19 @@ def _post_json(request):
         file_names=request.files.keys(),
         test_file_parameters=files_parameters, )
 
-    return json(return_dict)
+    return sanicjson(return_dict)
 
 
 @app.route("/rest_request")
+@log_function_entry_and_exit
 def _return_rest_request(request):
     return_dict = request
-    return json(return_dict)
+    return sanicjson(return_dict)
 
 
 @app.route("/csv_upload")
+@log_function_entry_and_exit
 def calculate_csv(request):
-    from IPython import embed
     print("Receiving a request to {}".format(request.url))
 
     # uploaded_files = request.files.items()
@@ -76,7 +83,7 @@ def calculate_csv(request):
     length = tempfile.write(input_file_content)
     if length == 0:
         print("File ({}) received is empty.".files[selected_key].name)
-        return json(dict(response="no content in uploaded file"))
+        return sanicjson(dict(response="no content in uploaded file"))
 
     # Reset file-read
     tempfile.seek(0)
@@ -104,10 +111,13 @@ def calculate_csv(request):
         aggregate_records=aggregate_records,
         overtime_records=overtime_records)
 
+    return_dict = json.dumps(return_dict, default=_serialize_json)
+
     print("Returning parsed records.")
-    embed()
-    return json(dict(response="ok", return_dict=return_dict))
+    return sanicjson(dict(response="ok", return_dict=return_dict))
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.info)
+    logging.Formatter(logging_format)
     app.run(host="127.0.0.1", port=8000, debug=True)
