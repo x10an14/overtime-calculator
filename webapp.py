@@ -56,10 +56,10 @@ def calculate_csv(request):
     logging.info("Receiving a request to {}".format(request.url))
 
     # uploaded_files = request.files.items()
-    print("Received the following files:")
+    logging.info("Received the following files:")
 
     files = request.files
-    print("\t#of files: {}, file_names: {}".format(
+    logging.info("\t#of files: {}, file_names: {}".format(
         len(files),
         [(x, y.name) for x, y in files.items()]))
 
@@ -82,30 +82,30 @@ def calculate_csv(request):
     # save content to temporary file in memory (not disk)
     length = tempfile.write(input_file_content)
     if length == 0:
-        print("File ({}) received is empty.".files[selected_key].name)
+        logging.info("File ({}) received is empty.".files[selected_key].name)
         return sanicjson(dict(response="no content in uploaded file"))
 
     # Reset file-read
     tempfile.seek(0)
-    print("Content writtent to tempfile...")
+    logging.info("Content writtent to tempfile...")
 
     # decide dialect:
     dialect = csv.Sniffer().sniff(tempfile.read())
     tempfile.seek(0)
-    print("CSV dialect '{}' sniffed...".format(dialect))
+    logging.info("CSV dialect '{}' sniffed...".format(dialect))
 
     # read csv:
     reader = csv.DictReader(tempfile, dialect=dialect)
     parsed_content = list(reader)
-    print("#rows in csv_file: {}".format(len(parsed_content)))
+    logging.info("#rows in csv_file: {}".format(len(parsed_content)))
 
-    print("Parsing time records...")
+    logging.info("Parsing time records...")
     aggregate_records, overtime_records = parse_csv_reader_content(
         csv_reader=parsed_content)
-    print("Parsing time records more deeply...")
+    logging.info("Parsing time records more deeply...")
     aggregate_records = parse_aggregate_weeks_and_weekdays(
         aggregate_data=aggregate_records)
-    print("Done parsing!")
+    logging.info("Done parsing!")
 
     return_dict = dict(
         aggregate_records=aggregate_records,
@@ -113,17 +113,19 @@ def calculate_csv(request):
 
     return_dict = json.dumps(return_dict, default=_serialize_json)
 
-    print("Returning parsed records.")
+    logging.info("Returning parsed records.")
     return sanicjson(dict(response="ok", return_dict=return_dict))
 
 
 if __name__ == '__main__':
-    debug = True
+    debug = False
 
-    logging_format = "%(asctime)s[%(process)d]%(levelname)s::%(module)s:%(lineno)d: "
+    logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
+    logging_format += "%(module)s::%(funcName)s():l%(lineno)d > "
+    logging_format += "%(message)s"
     logging.basicConfig(
-        level=logging.INFO,
         format=logging_format,
-        datefmt=default_parse_fmt, )
+        datefmt=default_parse_fmt,
+        level=logging.DEBUG if debug else logging.INFO, )
 
     app.run(host="127.0.0.1", port=8000, debug=debug)
