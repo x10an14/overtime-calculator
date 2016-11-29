@@ -1,22 +1,30 @@
 """Webapp start-up python script for Overtime-Calculator."""
 import csv
+import json
 import logging
 from tempfile import SpooledTemporaryFile
 
 # PIP imports:
-from sanic.response import json
+from sanic.response import json as sanicjson
 
 # Module imports:
 from src import app
+from src import _serialize_json
+from src import default_parse_fmt
+from src import log_function_entry_and_exit
+from src.calculations import parse_csv_reader_content
+from src.calculations import parse_aggregate_weeks_and_weekdays
 
 
 @app.route("/hello")
-def test(request):
-    return json({"hello": "world"})
+@log_function_entry_and_exit
+def _test(request):
+    return sanicjson({"hello": "world"})
 
 
 @app.route("/files")
-def post_json(request):
+@log_function_entry_and_exit
+def _post_json(request):
 
     def get_file_data_from_request_as_dict(request_data):
         return dict(
@@ -32,19 +40,20 @@ def post_json(request):
         file_names=request.files.keys(),
         test_file_parameters=files_parameters, )
 
-    return json(return_dict)
+    return sanicjson(return_dict)
 
 
 @app.route("/rest_request")
-def return_rest_request(request):
+@log_function_entry_and_exit
+def _return_rest_request(request):
     return_dict = request
-    return json(return_dict)
+    return sanicjson(return_dict)
 
 
 @app.route("/csv_upload")
+@log_function_entry_and_exit
 def calculate_csv(request):
-    from IPython import embed
-    print("Receiving a request to {}".format(request.url))
+    logging.info("Receiving a request to {}".format(request.url))
 
     # uploaded_files = request.files.items()
     print("Received the following files:")
@@ -74,24 +83,47 @@ def calculate_csv(request):
     length = tempfile.write(input_file_content)
     if length == 0:
         print("File ({}) received is empty.".files[selected_key].name)
-        return json(dict(response="no content in uploaded file"))
+        return sanicjson(dict(response="no content in uploaded file"))
 
     # Reset file-read
     tempfile.seek(0)
+    print("Content writtent to tempfile...")
 
     # decide dialect:
     dialect = csv.Sniffer().sniff(tempfile.read())
     tempfile.seek(0)
+    print("CSV dialect '{}' sniffed...".format(dialect))
 
-    # read csv
+    # read csv:
     reader = csv.DictReader(tempfile, dialect=dialect)
     parsed_content = list(reader)
     print("#rows in csv_file: {}".format(len(parsed_content)))
 
-    # embed()
+    print("Parsing time records...")
+    aggregate_records, overtime_records = parse_csv_reader_content(
+        csv_reader=parsed_content)
+    print("Parsing time records more deeply...")
+    aggregate_records = parse_aggregate_weeks_and_weekdays(
+        aggregate_data=aggregate_records)
+    print("Done parsing!")
 
-    return json({"response": "ok", "csv_dialecet": dialect})
+    return_dict = dict(
+        aggregate_records=aggregate_records,
+        overtime_records=overtime_records)
+
+    return_dict = json.dumps(return_dict, default=_serialize_json)
+
+    print("Returning parsed records.")
+    return sanicjson(dict(response="ok", return_dict=return_dict))
 
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=8000)
+    debug = True
+
+    logging_format = "%(asctime)s[%(process)d]%(levelname)s::%(module)s:%(lineno)d: "
+    logging.basicConfig(
+        level=logging.INFO,
+        format=logging_format,
+        datefmt=default_parse_fmt, )
+
+    app.run(host="127.0.0.1", port=8000, debug=debug)
