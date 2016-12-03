@@ -14,29 +14,39 @@ CSV_FILES_FOLDER = "tests/data"
     "file_name,compare_dict",
     [
         ("header_and_one_row_1.csv",
-            {
-                "Start time": "27-11-2016",
-                "End time": "28-11-2016",
-                "Hours": "0.00",
-                "Income": "0.00",
-                "First Check-In": "28-11-2016 08:20:00",
-                "Last Check-Out": "28-11-2016 08:20:00"
-            }),
+            [
+                {
+                    "Start time": "27-11-2016",
+                    "End time": "28-11-2016",
+                    "Hours": "0.00",
+                    "Income": "0.00",
+                    "First Check-In": "28-11-2016 08:20:00",
+                    "Last Check-Out": "28-11-2016 08:20:00"
+                },
+                {
+                    "Start time": "31-08-2016",
+                    "End time": "01-09-2016",
+                    "Hours": "7.00",
+                    "Income": "0.00",
+                    "First Check-In": "31-08-2016 10:00:00",
+                    "Last Check-Out": "31-08-2016 17:00:00"
+                }]),
         ("header_and_one_row_2.csv",
-            {
+            [{
                 "Billable status": "Open / Not billable",
                 "Date": "25.07.2016",
                 "Day": "Mon",
                 "From": "00:00",
                 "To": "06:30",
-                "Break": None,
+                "Break": "",
+                "": "",
                 "Duration": "06:30",
                 "Project": "870 Utvikling og drift",
                 "Project no.": "00870",
                 "Activity": "Egen kompetansebygging/kurs",
                 "Comment": "Opplæring/introduksjon",
-                "Reason for declining": None
-            })
+                "Reason for declining": ""
+            }])
     ])
 def test_valid_csv_files_parsing(file_name, compare_dict):
 
@@ -44,4 +54,4 @@ def test_valid_csv_files_parsing(file_name, compare_dict):
         return_dicts = get_csv_file_content_as_dicts(
             content=f.read(), file_name=file_name)
 
-    assert return_dicts == [compare_dict]
+    assert return_dicts == compare_dict

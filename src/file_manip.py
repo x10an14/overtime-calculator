@@ -48,7 +48,7 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
         reader = csv.DictReader(f, dialect=dialect)
         saved_content = list(reader)
 
-    if len(saved_content) <= 1:
+    if len(saved_content) < 1:
         logging.error(
             "Only one row found in {}! Need header row + data rows!".format(
                 file_name))
