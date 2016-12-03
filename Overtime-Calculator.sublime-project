@@ -2,12 +2,18 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns": [
+				"*.egg*",
+				".cache",
+				"__pycache__"
+			]
 		}
 	],
 	"settings":
 	{
-		"tab_size": 4
+		"tab_size": 4,
+		"translate_tabs_to_spaces": false,
 	},
 	"build_systems":
 	[
