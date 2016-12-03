@@ -25,7 +25,7 @@
 		},
 		{
 			"name": "Python Test",
-			"shell_cmd": "./venv/bin/python test_data.csv_upload.py data/data.csv"
+			"shell_cmd": "./venv/bin/python setup.py test"
 		}
 	]
 }
