@@ -1,5 +1,3 @@
-import os
-
 # PIP import(s):
 import pytest
 
@@ -73,8 +71,8 @@ CSV_FILES_FOLDER = "tests/data"
             }])
     ])
 def test_valid_csv_files_parsing(file_name, expected):
-
-    with open(os.path.join(CSV_FILES_FOLDER, file_name), "r") as f:
+    from os import path as op
+    with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
         return_dicts = get_csv_file_content_as_dicts(
             content=f.read(), file_name=file_name)
 
@@ -87,3 +85,42 @@ def test_valid_csv_files_parsing(file_name, expected):
     for x in return_dicts:
         # Make sure all in return_dicts are present in expected
         assert x in expected
+
+
+@pytest.mark.parametrize("file_name", ["empty_file.csv"])
+def test_empty_csv_file_parsing(file_name):
+    with pytest.raises(EOFError) as exc:
+
+        from os import path as op
+        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
+            get_csv_file_content_as_dicts(
+                content=f.read(), file_name=file_name)
+
+        assert exc.message == "File '{}' received is empty".format(file_name)
+
+
+@pytest.mark.parametrize("file_name", ["three_rows_no_header.csv"])
+def test_no_header_csv_file_parsing(file_name):
+    with pytest.raises(NotImplementedError) as exc:
+
+        from os import path as op
+        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
+            get_csv_file_content_as_dicts(
+                content=f.read(), file_name=file_name)
+
+        assert exc.message == "CSV file {} has no CSV header!".format(file_name)
+
+
+@pytest.mark.parametrize("file_name", ["header_only.csv"])
+def test_header_only_csv_file_parsing(file_name):
+    with pytest.raises(NotImplementedError) as exc:
+
+        from os import path as op
+        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
+            get_csv_file_content_as_dicts(
+                content=f.read(), file_name=file_name)
+
+        message = "Only one row found in {}! ".format(file_name)
+        message += "Need header row + data rows!"
+
+        assert exc.message == message

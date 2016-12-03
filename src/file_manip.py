@@ -17,8 +17,9 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
     file_length = len(content)
 
     if file_length == 0:
-        logging.error("File ({}) received is empty.".format(file_name))
-        raise EOFError
+        message = "File '{}' received is empty.".format(file_name)
+        logging.error(message)
+        raise EOFError(message)
 
     with SpooledTemporaryFile(
             file_length,
@@ -36,8 +37,9 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
 
         # Ensure file has header:
         if not csv.Sniffer().has_header(f.read(sniff_length)):
-            logging.error("CSV file {} has no CSV header!".format(file_name))
-            raise NotImplementedError
+            message = "CSV file {} has no CSV header!".format(file_name)
+            logging.error(message)
+            raise NotImplementedError(message)
         logging.info("CSV header found...")
         f.seek(0)
 
@@ -55,10 +57,10 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
         saved_content = list(reader)
 
     if len(saved_content) < 1:
-        logging.error(
-            "Only one row found in {}! Need header row + data rows!".format(
-                file_name))
-        raise NotImplementedError
+        message = "Only one row found in {}! ".format(file_name)
+        message += "Need header row + data rows!"
+        logging.error(message)
+        raise NotImplementedError(message)
 
     logging.debug("Returning: {}".format(saved_content))
     return saved_content if type(saved_content) is list else [saved_content]
