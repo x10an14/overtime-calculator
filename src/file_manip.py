@@ -25,8 +25,8 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
         assert length == file_length
 
         # Reset file-read to start of file
-        f.seek(0)
         logging.info("Content written to tempfile...")
+        f.seek(0)
 
         # Sniff read length:
         sniff_length = int(length / 2)
@@ -36,13 +36,16 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
             logging.error("CSV file {} has no CSV header!".format(file_name))
             raise NotImplementedError
         logging.info("CSV header found...")
+        f.seek(0)
 
         # decide dialect:
         dialect = csv.Sniffer().sniff(f.read(sniff_length))
-        f.seek(0)
         logging.debug("CSV dialect '{}' sniffed...".format(dialect))
-        logging.info(r"Delimiter: '{}', Line separator: {}".format(
-            dialect.delimiter, dialect.lineterminator.encode('unicode_escape')))
+        logging.info(r"Delimiter: '{}', Quotechar: '{}', Line separator: {}".format(
+            dialect.delimiter,
+            dialect.quotechar,
+            dialect.lineterminator.encode('unicode_escape')))
+        f.seek(0)
 
         # read csv:
         reader = csv.DictReader(f, dialect=dialect)
@@ -54,4 +57,5 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
                 file_name))
         raise NotImplementedError
 
-    return saved_content
+    logging.debug("Returning: {}".format(saved_content))
+    return saved_content if type(saved_content) is list else [saved_content]
