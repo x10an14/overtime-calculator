@@ -1,5 +1,5 @@
-#
-data/
+# Folders containing test data and such
+data
 
 # Sublime-Text
 *.sublime-workspace

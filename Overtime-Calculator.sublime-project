@@ -6,7 +6,8 @@
 			"folder_exclude_patterns": [
 				"*.egg*",
 				".cache",
-				"__pycache__"
+				"__pycache__",
+				".git",
 			]
 		}
 	],
@@ -21,17 +22,29 @@
 		// 	"name": "List",
 		// 	"shell_cmd": "ls -l"
 		// },
+		// {
+		// 	"name": "Python executable",
+		// 	"shell_cmd": "./venv/bin/python"
+		// },
 		{
-			"name": "Python executable",
-			"shell_cmd": "./venv/bin/python"
+			"name": "Install IPython",
+			"shell_cmd": "./venv/bin/pip install ipython"
 		},
-		{
-			"name": "IPython executable",
-			"shell_cmd": "./venv/bin/ipython"
-		},
+		// {
+		// 	"name": "IPython executable",
+		// 	"shell_cmd": "./venv/bin/ipython"
+		// },
 		{
 			"name": "Python Test",
 			"shell_cmd": "./venv/bin/python setup.py test"
-		}
+		},
+		{
+			"name": "Install venv",
+			"shell_cmd": "virtualenv -p python3.5 venv && venv/bin/pip install -r requirements.txt"
+		},
+		{
+			"name": "Update requirements.txt",
+			"shell_cmd": "./venv/bin/pip freeze > requirements.txt"
+		},
 	]
 }
