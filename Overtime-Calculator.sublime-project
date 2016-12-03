@@ -1,0 +1,31 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"tab_size": 4
+	},
+	"build_systems":
+	[
+		// {
+		// 	"name": "List",
+		// 	"shell_cmd": "ls -l"
+		// },
+		{
+			"name": "Python executable",
+			"shell_cmd": "./venv/bin/python"
+		},
+		{
+			"name": "IPython executable",
+			"shell_cmd": "./venv/bin/ipython"
+		},
+		{
+			"name": "Python Test",
+			"shell_cmd": "./venv/bin/python test_data.csv_upload.py data/data.csv"
+		}
+	]
+}
