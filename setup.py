@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='Overtime-Calculator',
@@ -9,4 +9,6 @@ setup(
     # author='Greg Ward',
     # author_email='gward@python.net',
     # url='https://www.python.org/sigs/distutils-sig/',
-    packages=['webapp'],)
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
+    packages=['src'],)
