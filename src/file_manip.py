@@ -1,15 +1,18 @@
 """Module for containing file utilities."""
 import csv
 import logging
-from tempfile import SpooledTemporaryFile
 
 # Module import
 from . import log_function_entry_and_exit
 
 
 @log_function_entry_and_exit
-def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile_func=SpooledTemporaryFile):
+def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile_func=None):
     """Function for sniffing CSV dialect and returning content as list of dicts per row."""
+    if tempfile_func is None:
+        from tempfile import SpooledTemporaryFile
+        tempfile_func = SpooledTemporaryFile
+
     # input_file_content = content.encode(encoding)
     file_length = len(content)
 
