@@ -1,24 +1,29 @@
 """Webapp start-up python script for Overtime-Calculator."""
-import json
 import logging
 
 # PIP imports:
-from sanic.response import json as sanicjson
+from sanic.response import json as sanic_json
+from sanic.response import text as sanic_text
+from sanic.response import html as sanic_html
+from jinja2 import Environment, PackageLoader
 
 # Module imports:
-from src import _serialize_json
 from src import app
-from src import default_parse_fmt
 from src import log_function_entry_and_exit
 from src.calculations import parse_csv_reader_content
 from src.calculations import parse_aggregate_weeks_and_weekdays
-from src.file_upload import get_uploaded_csv_file_content
+from src.file_manip import get_csv_file_content_as_dicts
 
 
 @app.route("/hello")
 @log_function_entry_and_exit
 def _test(request):
-    return sanicjson({"hello": "world"})
+    env = Environment(loader=PackageLoader('src', 'templates'))
+    template = env.get_template("basic.html")
+    # return sanic_json({"hello": "world"})
+    # return sanic_text("Hello world!")
+    a = template.render(a=dict(hello="world"))
+    return sanic_html(a)
 
 
 @app.route("/files")
@@ -39,14 +44,14 @@ def _post_json(request):
         file_names=request.files.keys(),
         test_file_parameters=files_parameters, )
 
-    return sanicjson(return_dict)
+    return sanic_json(return_dict)
 
 
 @app.route("/rest_request")
 @log_function_entry_and_exit
 def _return_rest_request(request):
     return_dict = request
-    return sanicjson(return_dict)
+    return sanic_json(return_dict)
 
 
 @app.route("/csv_upload")
@@ -66,11 +71,11 @@ def calculate_csv(request):
         logging.error(
             "Received {} files, can only accept receiving 1 (not 0) file.".format(
                 len(files)))
-        return sanicjson(dict(
+        return sanic_json(dict(
             response="Need one (and only one) csv file uploaded for this to work!"))
 
     selected_key = list(files.keys())[0]
-    saved_content = get_uploaded_csv_file_content(
+    saved_content = get_csv_file_content_as_dicts(
         content=files[selected_key].body,
         file_name=files[selected_key].name)
     logging.info("#rows in csv_file: {}".format(len(saved_content)))
@@ -84,27 +89,23 @@ def calculate_csv(request):
         aggregate_data=aggregate_records)
     logging.info("Done parsing!")
 
-    # Serialize data structures to json format
-    logging.info("Serializing data structures to json-string...")
     return_dict = dict(
         overtime_records=overtime_records,
         aggregate_records=aggregate_records,)
-    return_dict = json.dumps(return_dict, default=_serialize_json)
-    logging.info("Done serializing data structures to json-string!")
-
     logging.info("Returning parsed records...")
-    return sanicjson(dict(response="ok", return_dict=return_dict))
+    return sanic_json(dict(return_dict))
 
 
 if __name__ == '__main__':
     debug = True
 
+    default_time_fmt = "%d-%m-%Y %H:%M:%S"
     logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
     logging_format += "%(module)s::%(funcName)s():l%(lineno)d: "
     logging_format += "%(message)s"
     logging.basicConfig(
         format=logging_format,
-        datefmt=default_parse_fmt + "%f",
+        datefmt=default_time_fmt + "%f",
         level=logging.DEBUG if debug else logging.INFO, )
 
     app.run(host="127.0.0.1", port=8000, debug=debug)
