@@ -1,27 +1,37 @@
 """Module containing majory of calulation functions and their helpers."""
 from datetime import datetime
 from datetime import timedelta
-import logging
-
 from . import default_parse_fmt
 from . import default_work_days
 from . import default_work_hours_in_week
 from . import log_function_entry_and_exit
 
 
-# @log_function_entry_and_exit
-def parse_row(row, datetime_parse_fmt=default_parse_fmt):
+@log_function_entry_and_exit
+def parse_row(row, field_names, datetime_parse_fmt=default_parse_fmt, has_duration=True):
     # TODO: ADD DOCSTRING
 
     # TODO: figure out which fields (if any) have datetime
 
     # TODO: Replace these hardcoded field_names with names decided upon
     #       through above todo.
-    start_field_name, stop_field_name = "First Check-In", "Last Check-Out"
-    start_time = datetime.strptime(row[start_field_name], default_parse_fmt)
-    stop_time = datetime.strptime(row[stop_field_name], default_parse_fmt)
 
-    duration = (stop_time - start_time)
+    # Get date of current event/row
+    start_time = row[field_names[0]]
+    start_time = datetime.strptime(start_time, datetime_parse_fmt)
+    duration = row[field_names[1]]
+
+    if not has_duration:
+        # Get stop time to calculate duration
+        stop_time = datetime.strptime(duration, datetime_parse_fmt)
+
+        # Get duration as "HH:MM":
+        minutes = (stop_time - start_time).seconds // 60
+        hours = str(minutes // 60).zfill(2)
+        minutes = str(minutes % 60).zfill(2)
+
+        duration = ":".join((hours, minutes))
+
     return (duration, start_time.isocalendar())
 
 
