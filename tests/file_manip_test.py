@@ -1,3 +1,5 @@
+from os import path as op
+
 # PIP import(s):
 import pytest
 
@@ -5,7 +7,7 @@ import pytest
 from src.file_manip import get_csv_file_content_as_dicts
 
 
-CSV_FILES_FOLDER = "tests/data"
+CSV_FILES_FOLDER = op.join("tests", "data")
 
 
 @pytest.mark.parametrize(
@@ -71,7 +73,6 @@ CSV_FILES_FOLDER = "tests/data"
             }])
     ])
 def test_valid_csv_files_parsing(file_name, expected):
-    from os import path as op
     with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
         return_dicts = get_csv_file_content_as_dicts(
             content=f.read(), file_name=file_name)
@@ -91,7 +92,6 @@ def test_valid_csv_files_parsing(file_name, expected):
 def test_empty_csv_file_parsing(file_name):
     with pytest.raises(EOFError) as exc:
 
-        from os import path as op
         with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
             get_csv_file_content_as_dicts(
                 content=f.read(), file_name=file_name)
@@ -103,7 +103,6 @@ def test_empty_csv_file_parsing(file_name):
 def test_no_header_csv_file_parsing(file_name):
     with pytest.raises(NotImplementedError) as exc:
 
-        from os import path as op
         with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
             get_csv_file_content_as_dicts(
                 content=f.read(), file_name=file_name)
@@ -115,12 +114,10 @@ def test_no_header_csv_file_parsing(file_name):
 def test_header_only_csv_file_parsing(file_name):
     with pytest.raises(NotImplementedError) as exc:
 
-        from os import path as op
         with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
             get_csv_file_content_as_dicts(
                 content=f.read(), file_name=file_name)
 
         message = "Only one row found in {}! ".format(file_name)
         message += "Need header row + data rows!"
-
         assert exc.message == message
