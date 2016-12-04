@@ -2,8 +2,6 @@
 from datetime import datetime
 from datetime import timedelta
 from . import default_parse_fmt
-from . import default_work_days
-from . import default_work_hours_in_week
 from . import log_function_entry_and_exit
 
 
@@ -71,7 +69,7 @@ def parse_csv_reader_content(input_data, **kwargs):
 
 
 @log_function_entry_and_exit
-def parse_aggregate_weeks_and_weekdays(aggregate_data, hours_per_week=default_work_hours_in_week):
+def parse_aggregate_weeks_and_weekdays(aggregate_data, hours_per_week=37.5):
     # TODO: ADD DOCSTRING
 
     def get_timedelta_from_str(input_str, parse_fmt="%H:%M"):

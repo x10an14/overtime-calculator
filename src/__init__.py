@@ -11,8 +11,6 @@ from sanic import Sanic
 app = Sanic("overtime-calculator")
 
 default_parse_fmt = "%d-%m-%Y %H:%M:%S"
-default_work_hours_in_week = timedelta(hours=40)
-default_work_days = {"mon": 1, "tue": 2, "wed": 3, "thu": 4, "fri": 5}
 
 
 def _get_current_time_string(just_time_string=False):
