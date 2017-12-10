@@ -1,39 +1,10 @@
 {
-	"folders":
-	[
-		{
-			"path": ".",
-			"folder_exclude_patterns": [
-				"*.egg*",
-				".cache",
-				"__pycache__",
-				".git",
-			]
-		}
-	],
-	"settings":
-	{
-		"tab_size": 4,
-		"translate_tabs_to_spaces": false,
-	},
 	"build_systems":
 	[
-		// {
-		// 	"name": "List",
-		// 	"shell_cmd": "ls -l"
-		// },
-		// {
-		// 	"name": "Python executable",
-		// 	"shell_cmd": "./venv/bin/python"
-		// },
 		{
 			"name": "Install IPython",
 			"shell_cmd": "./venv/bin/pip install ipython"
 		},
-		// {
-		// 	"name": "IPython executable",
-		// 	"shell_cmd": "./venv/bin/ipython"
-		// },
 		{
 			"name": "Python Test",
 			"shell_cmd": "./venv/bin/python setup.py test"
@@ -46,5 +17,29 @@
 			"name": "Update requirements.txt",
 			"shell_cmd": "./venv/bin/pip freeze > requirements.txt"
 		},
-	]
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"python\" -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"*.egg*",
+				".cache",
+				"__pycache__",
+				".git"
+			],
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"tab_size": 4,
+		"translate_tabs_to_spaces": false
+	}
 }

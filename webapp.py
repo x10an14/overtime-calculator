@@ -15,7 +15,7 @@ from src.calculations import parse_aggregate_weeks_and_weekdays
 from src.file_manip import get_csv_file_content_as_dicts
 
 
-@app.route("/hello")
+@app.route("/hello", methods=["GET"])
 @log_function_entry_and_exit
 def _test(request):
     env = Environment(loader=PackageLoader('src', 'templates'))
@@ -26,7 +26,7 @@ def _test(request):
     return sanic_html(a)
 
 
-@app.route("/files")
+@app.route("/post_debug", methods=["POST"])
 @log_function_entry_and_exit
 def _post_json(request):
 
@@ -40,7 +40,7 @@ def _post_json(request):
     files_parameters = [func(x) for x in request.files.keys()]
 
     return_dict = dict(
-        received=True,
+        request=request.body,
         file_names=request.files.keys(),
         test_file_parameters=files_parameters, )
 
