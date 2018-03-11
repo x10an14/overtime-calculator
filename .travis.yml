@@ -11,6 +11,6 @@ install:
   - pip install pipenv
   - pipenv install --dev
 script:
-  - pipenv run coverage setup.py test # Full test suite, incl. coverage
+  - pipenv run coverage run setup.py test # Full test suite, incl. coverage
 after_success:
   - pipenv run coverage html
