@@ -16,7 +16,7 @@ Hobby programming project, with the intent of simplifying overtime calculation(s
 - [ ] Split out library logic into its own git repo
 
 ## Tests:
-The tests are composed by with the Hypothesis framework, and run with (https://github.com/pytest-dev/pytest)[py.test].
+The tests are composed by with the Hypothesis framework, and run with [py.test](https://github.com/pytest-dev/pytest).
 The tests should lie in the `tests/` folder inside the git repo.
 Any data used for integration testing lies inside `tests/data/`.
 

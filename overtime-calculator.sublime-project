@@ -44,7 +44,7 @@
 		// 	"shell_cmd": "pipenv run ipython"
 		// },
 		{
-			"name": "Python Test",
+			"name": "Run tests",
 			"shell_cmd": "pipenv run python setup.py test"
 		},
 	]

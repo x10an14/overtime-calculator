@@ -1,0 +1,16 @@
+language: python
+branches:
+  only:
+  - master
+  - /^check-.*$/
+python:
+  - "3.6"
+  - "3.7-dev"  # 3.7 development branch
+install:
+  - pip install -U pip
+  - pip install pipenv
+  - pipenv install --dev
+script:
+  - pipenv run coverage setup.py test # Full test suite, incl. coverage
+after_success:
+  - pipenv run coverage html
