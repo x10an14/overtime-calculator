@@ -5,10 +5,11 @@ from setuptools import setup
 setup(
     name='Overtime-Calculator',
     version='0.1',
-    # description='Python Distribution Utilities',
-    # author='Greg Ward',
-    # author_email='gward@python.net',
-    # url='https://www.python.org/sigs/distutils-sig/',
+    description='Python application to help calculate work overtime surplus/deficit.',
+    author='Christian Chavez',
+    author_email='x10an14@gmail.com',
+    # url='https://www.non-existing.com',
     setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
-    packages=['src'],)
+    tests_require=['pytest', 'hypothesis'],
+    packages=['src'],
+)

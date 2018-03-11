@@ -1,0 +1,51 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": [
+				"*.egg*",
+				".cache",
+				"__pycache__",
+				".git",
+			]
+		}
+	],
+	"settings":
+	{
+		"tab_size": 4,
+		"translate_tabs_to_spaces": false,
+	},
+	"build_systems":
+	[
+		{
+			"name": "Install project dependencies",
+			"shell_cmd": "pipenv install"
+		},
+		{
+			"name": "Install dev dependencies",
+			"shell_cmd": "pipenv install --dev"
+		},
+		{
+			"name": "Update Pipenv",
+			"shell_cmd": "pipenv install --dev"
+		},
+		{
+			"name": "Lock dependencies pre-release",
+			"shell_cmd": "pipenv lock --pre"
+		},
+		{
+			"name": "Lock dependencies",
+			"shell_cmd": "pipenv lock"
+		},
+		// Doesn't work in Sublime Text 3 terminal...
+		// {
+		// 	"name": "IPython executable",
+		// 	"shell_cmd": "pipenv run ipython"
+		// },
+		{
+			"name": "Python Test",
+			"shell_cmd": "pipenv run python setup.py test"
+		},
+	]
+}
