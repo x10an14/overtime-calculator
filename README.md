@@ -1,4 +1,4 @@
-# Overtime-Calculator
+# Overtime-Calculator [![Build Status](https://travis-ci.org/x10an14/overtime-calculator.svg?branch=master)](https://travis-ci.org/x10an14/overtime-calculator)
 Hobby programming project, with the intent of simplifying overtime calculation(s).
 
 ### Major dependencies:
