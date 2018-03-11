@@ -5,10 +5,6 @@ from datetime import timedelta
 import logging
 
 # PIP import:
-from sanic import Sanic
-
-
-app = Sanic("overtime-calculator")
 
 default_parse_fmt = "%d-%m-%Y %H:%M:%S"
 
@@ -16,7 +12,7 @@ default_parse_fmt = "%d-%m-%Y %H:%M:%S"
 def _get_current_time_string(just_time_string=False):
     if just_time_string:
         return datetime.now().strftime(default_parse_fmt)
-    return datetime.now().strftime("[{}]: ".format(default_parse_fmt))
+    return datetime.now().strftime(f"[{default_parse_fmt}]: ")
 
 
 # Primarily useful for debugging of json objects
@@ -48,21 +44,23 @@ def log_function_entry_and_exit(decorated_function):
     def wrapper(*dec_fn_args, **dec_fn_kwargs):
         # Log function entry
         func_name = decorated_function.__name__
-        logging.info('Entering {}()...'.format(func_name))
+        logging.info(f"Entering {func_name}()...")
 
         # get function params (args and kwargs)
         arg_names = decorated_function.__code__.co_varnames
         params = dict(
             args=dict(zip(arg_names, dec_fn_args)),
-            kwargs=dec_fn_kwargs)
+            kwargs=dec_fn_kwargs
+        )
 
         logging.debug(
-            "\t" +
-            ', '.join([
-                '{}={}'.format(str(k), repr(v)) for k, v in params.items()]))
+            "\t" + ', '.join(
+                [f"{k}={v}" for k, v in params.items()]
+            )
+        )
         # Execute wrapped (decorated) function:
         out = decorated_function(*dec_fn_args, **dec_fn_kwargs)
-        logging.info('Done running {}()!'.format(func_name))
+        logging.info("Done running {func_name}()!")
 
         return out
     return wrapper
@@ -81,8 +79,8 @@ class TrackEntryAndExit(ContextDecorator):
 
     def __enter__(self):
         """Why is this doc-string required?..."""
-        logging.info(_get_current_time_string() + 'Entering: {}'.format(self.name))
+        logging.info(_get_current_time_string() + 'Entering: {self.name}')
 
     def __exit__(self, exc_type, exc, exc_tb):
         """Why is this doc-string required?..."""
-        logging.info(_get_current_time_string() + 'Exiting: {}'.format(self.name))
+        logging.info(_get_current_time_string() + 'Exiting: {self.name}')
