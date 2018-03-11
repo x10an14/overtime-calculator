@@ -13,7 +13,7 @@ Hobby programming project, with the intent of simplifying overtime calculation(s
   * [ ] Specify desired surplus/deficit to aim for (maybe also deadline so as to aim for a vacation?)
 - [ ] Display these intended features in a simple web GUI
   * (Maybe do this in a separate NodeJS repo?)
-- [ ] Split out library logic into its own git repo
+- [ ] Split out library logic
 
 ## Tests:
 The tests are composed by with the Hypothesis framework, and run with [py.test](https://github.com/pytest-dev/pytest).
