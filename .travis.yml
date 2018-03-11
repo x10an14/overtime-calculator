@@ -2,7 +2,7 @@ language: python
 branches:
   only:
   - master
-  - /^check-.*$/
+  - /^ci-.*$/
 python:
   - "3.6"
   - "3.7-dev"  # 3.7 development branch
