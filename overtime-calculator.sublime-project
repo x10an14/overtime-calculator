@@ -44,8 +44,13 @@
 		// 	"shell_cmd": "pipenv run ipython"
 		// },
 		{
-			"name": "Python Test",
-			"shell_cmd": "pipenv run python setup.py test"
+			"name": "Run test coverage",
+			"shell_cmd": "pipenv run coverage run setup.py test"
 		},
+		// Currently not working...
+		// {
+		// 	"name": "Run tests",
+		// 	"shell_cmd": "pipenv run python setup.py tests"
+		// },
 	]
 }

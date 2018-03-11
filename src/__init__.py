@@ -4,8 +4,6 @@ from datetime import datetime
 from datetime import timedelta
 import logging
 
-# PIP import:
-
 default_parse_fmt = "%d-%m-%Y %H:%M:%S"
 
 
@@ -52,7 +50,6 @@ def log_function_entry_and_exit(decorated_function):
             args=dict(zip(arg_names, dec_fn_args)),
             kwargs=dec_fn_kwargs
         )
-
         logging.debug(
             "\t" + ', '.join(
                 [f"{k}={v}" for k, v in params.items()]
