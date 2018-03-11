@@ -10,8 +10,10 @@ install:
   - pip install -U pip
   - pip install pipenv
   - pipenv install --dev
+before_script:
+  - make clean
 script:
   # Full test suite, incl. coverage
-  - pipenv run python -m coverage run --branch --source overtime_calculator --omit=overtime_calculator/setup.py -m py.test
+  - make check_minimum_coverage
 after_success:
-  - pipenv run python -m coverage report
+  - make html_test_report

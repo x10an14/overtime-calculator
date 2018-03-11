@@ -27,10 +27,6 @@
 			"shell_cmd": "pipenv install --dev"
 		},
 		{
-			"name": "Update Pipenv",
-			"shell_cmd": "pipenv install --dev"
-		},
-		{
 			"name": "Lock dependencies pre-release",
 			"shell_cmd": "pipenv lock --pre"
 		},
@@ -45,11 +41,11 @@
 		// },
 		{
 			"name": "Run test coverage",
-			"shell_cmd": "pipenv run python -m coverage run --branch --source overtime_calculator --omit=overtime_calculator/setup.py -m py.test && pipenv run python -m coverage report"
+			"shell_cmd": "make test"
 		},
 		{
 			"name": "Get coverage HTML report",
-			"shell_cmd": "pipenv run python -m coverage html && firefox htmlcov/index.html"
+			"shell_cmd": "make html_test_report && firefox htmlcov/index.html"
 		},
 		{
 			"name": "Run tests",
