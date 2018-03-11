@@ -15,22 +15,24 @@ Hobby programming project, with the intent of simplifying overtime calculation(s
   * (Maybe do this in a separate NodeJS repo?)
 - [ ] Split out library logic
 
-## Tests:
+### Tests:
 The tests are composed by with the Hypothesis framework, and run with [py.test](https://github.com/pytest-dev/pytest).
 The tests should lie in the `tests/` folder inside the git repo.
 Any data used for integration testing lies inside `tests/data/`.
 
-### Run (just) tests:
+__NB!!!__: All below test-commands should be executed in root of git repo!
+
+##### Run (just) tests:
 py.test is used, and lies in requirements.txt.
 To execute, run the below command from the root of the git repo:
 `pipenv run python -m pytest tests`
 
-### Run test Coverage:
+##### Run test Coverage:
 Coverage is used, and included in requirements.txt.
 See below for how to use:
 `pipenv run coverage run setup.py test`
 
-#### To get Coverage report:
+###### To get Coverage report:
 `pipenv run coverage html`
 
 To open HTML up in Google Chrome from terminal:

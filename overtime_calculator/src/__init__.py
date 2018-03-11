@@ -1,4 +1,3 @@
-"""Base module containing the global app variable++."""
 from contextlib import ContextDecorator
 from datetime import datetime
 from datetime import timedelta

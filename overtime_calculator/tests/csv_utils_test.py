@@ -4,10 +4,9 @@ from os import path as op
 import pytest
 
 # Module import(s):
-from src.file_manip import get_csv_file_content_as_dicts
+from overtime_calculator.src.csv_utils import get_csv_file_content_as_dicts
 
-
-CSV_FILES_FOLDER = op.join("tests", "data")
+CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
 
 
 @pytest.mark.parametrize(

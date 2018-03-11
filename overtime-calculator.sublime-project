@@ -45,11 +45,15 @@
 		// },
 		{
 			"name": "Run test coverage",
-			"shell_cmd": "pipenv run coverage run setup.py test"
+			"shell_cmd": "pipenv run python -m coverage run --branch --source overtime_calculator --omit=overtime_calculator/setup.py -m py.test && pipenv run python -m coverage report"
+		},
+		{
+			"name": "Get coverage HTML report",
+			"shell_cmd": "pipenv run python -m coverage html && firefox htmlcov/index.html"
 		},
 		{
 			"name": "Run tests",
-			"shell_cmd": "pipenv run python -m pytest tests"
+			"shell_cmd": "pipenv run python -m pytest overtime_calculator/"
 		},
 	]
 }

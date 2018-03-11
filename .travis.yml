@@ -11,6 +11,7 @@ install:
   - pip install pipenv
   - pipenv install --dev
 script:
-  - pipenv run coverage run setup.py test # Full test suite, incl. coverage
+  # Full test suite, incl. coverage
+  - pipenv run python -m coverage run --branch --source overtime_calculator --omit=overtime_calculator/setup.py -m py.test
 after_success:
-  - pipenv run coverage html
+  - pipenv run python -m coverage report
