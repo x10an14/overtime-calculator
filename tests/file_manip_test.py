@@ -13,7 +13,7 @@ CSV_FILES_FOLDER = op.join("tests", "data")
 @pytest.mark.parametrize(
     "file_name,expected",
     [
-        ("header_and_one_row_1.csv",
+        ("header_and_five_rows.csv",
             [
                 {
                     "Start time": "27-11-2016",
@@ -55,7 +55,7 @@ CSV_FILES_FOLDER = op.join("tests", "data")
                     "First Check-In": "04-10-2016 09:10:00",
                     "Last Check-Out": "04-10-2016 16:40:00"
                 }]),
-        ("header_and_one_row_2.csv",
+        ("header_and_one_row.csv",
             [{
                 "Billable status": "Open / Not billable",
                 "Date": "25.07.2016",
