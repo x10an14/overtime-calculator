@@ -2,8 +2,8 @@
 Hobby programming project, with the intent of simplifying overtime calculation(s).
 
 ### Major dependencies:
-1. (https://github.com/timothycrosley/hug/)[Hug]
-2. (https://github.com/HypothesisWorks/hypothesis-python)[Hypothesis]
+1. [Hug](https://github.com/timothycrosley/hug)
+2. [Hypothesis](https://github.com/HypothesisWorks/hypothesis-python)
 
 ### Intended features:
 - [ ] Read in input from CSV files
