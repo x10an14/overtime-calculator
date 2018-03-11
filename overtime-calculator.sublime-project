@@ -47,10 +47,9 @@
 			"name": "Run test coverage",
 			"shell_cmd": "pipenv run coverage run setup.py test"
 		},
-		// Currently not working...
-		// {
-		// 	"name": "Run tests",
-		// 	"shell_cmd": "pipenv run python setup.py tests"
-		// },
+		{
+			"name": "Run tests",
+			"shell_cmd": "pipenv run python -m pytest tests"
+		},
 	]
 }

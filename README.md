@@ -23,7 +23,7 @@ Any data used for integration testing lies inside `tests/data/`.
 ### Run (just) tests:
 py.test is used, and lies in requirements.txt.
 To execute, run the below command from the root of the git repo:
-`pipenv run python setup.py test`
+`pipenv run python -m pytest tests`
 
 ### Run test Coverage:
 Coverage is used, and included in requirements.txt.
