@@ -2,9 +2,9 @@
 Hobby programming project, with the intent of simplifying overtime calculation(s).
 
 ### Major dependencies:
-1. [Pipenv](https://github.com/pypa/pipenv)
-2. [Hug](https://github.com/timothycrosley/hug)
-3. [Hypothesis](https://github.com/HypothesisWorks/hypothesis-python)
+- [Hug](https://github.com/timothycrosley/hug)
+- [Pipenv](https://github.com/pypa/pipenv)
+- [Hypothesis](https://github.com/HypothesisWorks/hypothesis-python)
 
 ### Intended features:
 - [ ] Read in input from CSV files
