@@ -10,7 +10,7 @@ install: Pipfile
 	pipenv install --dev
 
 test: install $(python_files)
-	pipenv run python -m coverage run --rcfile=.coveragerc -m py.test
+	pipenv run python -m coverage run -m py.test
 
 check_minimum_coverage:
 	# https://stackoverflow.com/a/14605330
