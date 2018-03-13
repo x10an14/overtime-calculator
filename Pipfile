@@ -8,13 +8,13 @@ name = "pypi"
 [packages]
 
 hug = "*"
-hypothesis = "*"
 jwt = "*"
-coveralls = "*"
+hypothesis = "*"
 
 
 [dev-packages]
 
+coveralls = "*"
 ipython = "*"
 pytest = "*"
 
