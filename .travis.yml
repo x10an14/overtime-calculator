@@ -15,6 +15,3 @@ before_script:
 script:
   # Full test suite, incl. coverage
   - make test
-  - make check_minimum_coverage
-after_success:
-  - make html_test_report
