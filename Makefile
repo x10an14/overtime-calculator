@@ -1,4 +1,4 @@
-.PHONY: install pre_release release lock test html_test_report check_minimum_coverage clean
+.PHONY: install pre_release release lock test html_test_report clean
 
 COVERAGE_THRESHOLD := "70"
 python_files := $(shell find overtime_calculator/ -name '*.py')
@@ -9,13 +9,10 @@ install: Pipfile
 	sudo aptitude install build-essential libssl-dev libffi-dev python3.6-dev
 	pipenv install --dev
 
-test: install $(python_files)
+# TODO: Figure out how to add 'install'-rule as pre-requisite
+test: $(python_files)
 	pipenv run python -m coverage run -m py.test
-
-check_minimum_coverage:
-	# https://stackoverflow.com/a/14605330
-	pipenv run python -m coverage report | egrep '^TOTAL' | pipenv run python \
-	bin/compare_numbers.py $(COVERAGE_THRESHOLD)
+	pipenv run python -m coverage report -m
 
 html_test_report: test
 	pipenv run python -m coverage html
