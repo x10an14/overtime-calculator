@@ -3,35 +3,6 @@ from datetime import datetime
 from datetime import timedelta
 import logging
 
-default_parse_fmt = "%d-%m-%Y %H:%M:%S"
-
-
-def _get_current_time_string(just_time_string=False):
-    if just_time_string:
-        return datetime.now().strftime(default_parse_fmt)
-    return datetime.now().strftime(f"[{default_parse_fmt}]: ")
-
-
-# Primarily useful for debugging of json objects
-# which contain datetime.datetime objects.
-# http://stackoverflow.com/a/22238613
-#   More can be added over time...
-def _serialize_json(obj, time_format=None):
-    if isinstance(obj, datetime):
-        serialized = obj.strftime(
-            time_format if time_format is not None else default_parse_fmt)
-        return serialized
-    elif isinstance(obj, timedelta):
-        serialized = str(obj)
-        return serialized
-    elif isinstance(obj, tuple):
-        serialized = str(list(obj))
-        return serialized
-    elif isinstance(obj, set):
-        serialized = list(obj)
-        return serialized
-    raise TypeError
-
 
 def log_function_entry_and_exit(decorated_function):
     """Function decorator logging entry + exit (as logging.info), and parameters (as logging.debug) of functions."""
