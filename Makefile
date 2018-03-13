@@ -25,6 +25,7 @@ pre_release: Pipfile
 
 lock release: Pipfile
 	pipenv lock
+	git add Pipfile.lock
 
 clean:
 	rm -rf .pytest_cache .hypothesis htmlcov
