@@ -10,12 +10,7 @@ install: Pipfile
 	pipenv install --dev
 
 test: install $(python_files)
-	pipenv run python -m coverage run \
-	--branch \
-	--source=overtime_calculator \
-	--omit=overtime_calculator/setup.py \
-	-m py.test
-	pipenv run python -m coverage report
+	pipenv run python -m coverage run --rcfile=.coveragerc -m py.test
 
 check_minimum_coverage:
 	# https://stackoverflow.com/a/14605330

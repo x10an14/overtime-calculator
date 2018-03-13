@@ -1,2 +1,12 @@
 [run]
-source = overtime-calculator
+branch = True
+source =
+    overtime_calculator
+omit =
+    overtime_calculator/setup.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
+    if __name__ == .__main__.:
