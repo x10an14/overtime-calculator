@@ -1,13 +1,15 @@
 .PHONY: install pre_release release lock test html_test_report check_minimum_coverage clean
 
+COVERAGE_THRESHOLD := "70"
 python_files := $(shell find overtime_calculator/ -name '*.py')
 
 all: install html_test_report
 
-install: Pipfile $(python_files)
+install: Pipfile
+	sudo aptitude install build-essential libssl-dev libffi-dev python3.6-dev
 	pipenv install --dev
 
-test: Pipfile $(python_files)
+test: install $(python_files)
 	pipenv run python -m coverage run \
 	--branch \
 	--source=overtime_calculator \
@@ -15,11 +17,10 @@ test: Pipfile $(python_files)
 	-m py.test
 	pipenv run python -m coverage report
 
-coverage_threshold := "70"
 check_minimum_coverage:
 	# https://stackoverflow.com/a/14605330
 	pipenv run python -m coverage report | egrep '^TOTAL' | pipenv run python \
-	bin/compare_numbers.py $(coverage_threshold)
+	bin/compare_numbers.py $(COVERAGE_THRESHOLD)
 
 html_test_report: test
 	pipenv run python -m coverage html
