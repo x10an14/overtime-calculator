@@ -18,7 +18,10 @@ Hobby programming project, with the intent of simplifying overtime calculation(s
 - [ ] Display these intended features in a simple web GUI
   * (Maybe do this in a separate NodeJS repo?)
 - [ ] Split out library logic
-- [ ] Use [Sphinx](https://pythonhosted.org/an_example_pypi_project/sphinx.html) for documentation
+- [x] Use [Sphinx](https://pythonhosted.org/an_example_pypi_project/sphinx.html) for documentation
+  * [x] Added sphinx generation of docs to Makefile
+  * [ ] Enter test coverage of docs?
+  * [ ] Flesh out documentation
 
 ### Tests:
 The tests are composed by with the Hypothesis framework, and run with [py.test](https://github.com/pytest-dev/pytest).
