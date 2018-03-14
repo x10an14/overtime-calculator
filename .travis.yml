@@ -15,3 +15,5 @@ before_script:
 script:
   # Full test suite, incl. coverage
   - make test
+after_script:
+  - coveralls

@@ -4,6 +4,7 @@ source =
     overtime_calculator
 omit =
     overtime_calculator/setup.py
+    overtime_calculator/tests/*.py
 
 [report]
 fail_under = 80
