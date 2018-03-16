@@ -3,8 +3,10 @@ import bcrypt
 import jwt
 import os
 from pathlib import Path
+from typing import Dict
 
 from . import get_secret
+from . import token_verify
 
 
 # This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
@@ -16,14 +18,6 @@ def get_user_folder(username: str) -> Path:
     if not user_folder.exists():
         user_folder.mkdir(parents=True)
     return user_folder
-
-
-def token_verify(token):
-    secret = get_secret()
-    try:
-        return jwt.decode(token, secret, algorithm='HS256')
-    except jwt.DecodeError:
-        return False
 
 
 @hug.post('/register')
@@ -42,7 +36,7 @@ def register_user(username, password):
 
 
 @hug.post('/signin')
-def signin_user(username, password):
+def signin_user(username: str, password: str) -> Dict[str, str]:
     secret = get_secret()
     user_folder = get_user_folder(username)
     if user_folder.exists():
