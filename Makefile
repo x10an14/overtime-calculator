@@ -1,6 +1,5 @@
-.PHONY: install pre_release release lock test html_test_report clean check_pep8
+.PHONY: install pre_release release lock test html_test_report clean check_pep8 start_api
 
-COVERAGE_THRESHOLD := "70"
 python_files := $(shell find overtime_calculator/ -name '*.py')
 
 all: install html_test_report
@@ -19,6 +18,9 @@ html_test_report: test
 
 check_pep8: $(python_files)
 	pipenv run python -m flake8 overtime_calculator
+
+start_api: $(python_files)
+	pipenv run hug -f overtime_calculator/src/api.py
 
 pre_release: Pipfile
 	pipenv lock --pre

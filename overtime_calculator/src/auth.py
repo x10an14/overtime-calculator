@@ -2,45 +2,46 @@ import hug
 import bcrypt
 import jwt
 import os
+from pathlib import Path
+from typing import Mapping
 
-def get_users_folder(username):
-    return "Users/" + username
+from . import get_secret
+from . import token_verify
 
-def get_secret():
-    return 'sflkjsdjkfd'
-
-def token_verify(token):
-    secret = get_secret()
-    try:
-        return jwt.decode(token, secret, algorithm='HS256') 
-    except jwt.DecodeError:
-        return False
 
 # This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
 token_key_authentication = hug.authentication.token(token_verify)
 
+
+def get_user_folder(username: str) -> Path:
+    user_folder = Path('.') / 'data' / 'users' / username
+    if not user_folder.exists():
+        user_folder.mkdir(parents=True)
+    return user_folder
+
+
 @hug.post('/register')
-def register_user(username, password):
-    if os.path.exists(get_users_folder(username)):
+def register_user(username: str, password: str):
+    user_folder = get_user_folder(username)
+    user_pw_file = user_folder / 'password.txt'
+    if user_pw_file.exists():
         return {'error' : 'username already in use'}
-    try:
-        os.makedirs(get_users_folder(username))
-        hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
-        with open(get_users_folder(username) + '/password.txt', 'wb') as f:
-            f.write(hashed_password)
-        return {'status' : 'ok'}
-    except:
-        return {'error' : 'something went wrong with user registration'}
+
+    hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
+    with user_pw_file.open(mode='wb') as f:
+        f.write(hashed_password)
+    return {'status' : 'ok'}
+
 
 @hug.post('/signin')
-def signin_user(username, password):
+def signin_user(username: str, password: str):
     secret = get_secret()
-    if os.path.exists(get_users_folder(username)):
-        try:
-            with open(get_users_folder(username) + '/password.txt', 'rb') as f:
-                hashed_password = f.readline()
-            if bcrypt.checkpw(str.encode(password), hashed_password):
-                return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
-        except:
-            return {'error' : 'something went wrong with user signin'}
-    return {'error': 'Invalid credentials'}
+    user_folder = get_user_folder(username)
+    user_pw_file = user_folder / 'password.txt'
+    if not user_pw_file.exists():
+        return {'error': 'Invalid credentials'}
+
+    with user_pw_file.open(mode='rb') as f:
+        hashed_password = f.readline()
+    if bcrypt.checkpw(str.encode(password), hashed_password):
+        return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
