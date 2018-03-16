@@ -3,7 +3,7 @@ import bcrypt
 import jwt
 import os
 from pathlib import Path
-from typing import Dict
+from typing import Mapping
 
 from . import get_secret
 from . import token_verify
@@ -26,13 +26,11 @@ def register_user(username: str, password: str):
     user_pw_file = user_folder / 'password.txt'
     if user_pw_file.exists():
         return {'error' : 'username already in use'}
-    # try:
+
     hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
     with user_pw_file.open(mode='wb') as f:
         f.write(hashed_password)
     return {'status' : 'ok'}
-    # except:
-    #     return {'error' : 'something went wrong with user registration'}
 
 
 @hug.post('/signin')
