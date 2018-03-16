@@ -4,6 +4,13 @@ from datetime import timedelta
 import logging
 
 
+default_parse_fmt = "%d-%m-%Y %H:%M:%S"
+
+
+def get_secret():
+    return 'sflkjsdjkfd'
+
+
 def log_function_entry_and_exit(decorated_function):
     '''
     Function decorator logging time spent.
