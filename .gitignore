@@ -1,5 +1,6 @@
-# Folders containing test data and such
-data
+# Folders containing test/user data and such
+data/
+users/
 
 # Flake8 logfile
 .flake8.log

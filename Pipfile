@@ -8,9 +8,10 @@ name = "pypi"
 [packages]
 
 hug = "*"
-jwt = "*"
 hypothesis = "*"
 "flake8" = "*"
+bcrypt = "*"
+pyjwt = "*"
 
 
 [dev-packages]
