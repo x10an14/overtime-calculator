@@ -10,6 +10,7 @@ name = "pypi"
 hug = "*"
 jwt = "*"
 hypothesis = "*"
+"flake8" = "*"
 
 
 [dev-packages]
