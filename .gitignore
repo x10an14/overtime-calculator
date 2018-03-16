@@ -1,6 +1,9 @@
 # Folders containing test data and such
 data
 
+# Flake8 logfile
+.flake8.log
+
 # Sublime-Text
 *.sublime-workspace
 
