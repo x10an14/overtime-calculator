@@ -16,6 +16,7 @@ install:
   - pipenv install --dev --ignore-pipfile
 before_script:
   - make clean
+  - make check_pep8
 script:
   # Full test suite, incl. coverage
   - make test
