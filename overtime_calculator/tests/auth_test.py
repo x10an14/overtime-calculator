@@ -32,13 +32,6 @@ def _register_user(user: str, pw: str):
     # Return so calling function can know result...
     return response.data
 
-@given(
-    user=VALID_USERNAME,
-    pw=VALID_PASSWORD,
-)
-def test_a_registration(user: str, pw: str):
-    _ = _register_user(user, pw)
-
 
 @given(
     user=VALID_USERNAME,
