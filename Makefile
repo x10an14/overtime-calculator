@@ -10,7 +10,7 @@ install: Pipfile
 
 # TODO: Figure out how to add 'install'-rule as pre-requisite
 test: $(python_files)
-	pipenv run python -m coverage run -m py.test
+	pipenv run python -m coverage run -m py.test -v
 	pipenv run python -m coverage report -m
 
 html_test_report: test

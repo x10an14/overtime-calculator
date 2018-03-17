@@ -1,9 +1,11 @@
-import hug
-import bcrypt
-import jwt
 import os
 from pathlib import Path
 from typing import Mapping
+
+import hug
+import jwt
+import bcrypt
+from usernames import is_safe_username
 
 from . import get_secret
 from . import token_verify
@@ -22,15 +24,18 @@ def get_user_folder(username: str) -> Path:
 
 @hug.post('/register')
 def register_user(username: str, password: str):
+    if not is_safe_username(username):
+        return dict(error='Illegal character/word in username, try another one.')
+
     user_folder = get_user_folder(username)
-    user_pw_file = user_folder / 'password.txt'
-    if user_pw_file.exists():
-        return {'error' : 'username already in use'}
+    if user_folder.exists():
+        return {'error' : 'Username already in use.'}
 
     hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
+    user_pw_file = user_folder / 'password.txt'
     with user_pw_file.open(mode='wb') as f:
         f.write(hashed_password)
-    return {'status' : 'ok'}
+    return {'status' : 'Ok'}
 
 
 @hug.post('/signin')

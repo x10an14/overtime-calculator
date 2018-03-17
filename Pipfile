@@ -12,6 +12,7 @@ hypothesis = "*"
 "flake8" = "*"
 bcrypt = "*"
 pyjwt = "*"
+python-usernames = "*"
 
 
 [dev-packages]
