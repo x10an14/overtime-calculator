@@ -12,7 +12,7 @@ VALID_PASSWORD = st.text(min_size=6)
 VALID_USERNAME = st.from_regex(r'[a-zA-Z]+[a-zA-Z0-9_-]*[a-zA-Z0-9]+')
 
 
-def _sign_in_user(user: str, pw: str):
+def _register_user(user: str, pw: str):
     response = hug.test.post(
         api,
         '/register',
@@ -29,13 +29,15 @@ def _sign_in_user(user: str, pw: str):
     else:
         assert response.data == dict(error='Illegal character/word in username, try another one.')
 
+    # Return so calling function can know result...
+    return response.data
 
 @given(
     user=VALID_USERNAME,
     pw=VALID_PASSWORD,
 )
 def test_a_registration(user: str, pw: str):
-    _sign_in_user(user, pw)
+    _ = _register_user(user, pw)
 
 
 @given(
@@ -44,7 +46,10 @@ def test_a_registration(user: str, pw: str):
 )
 def test_signin(user: str, pw: str):
     # First ensure sign-in:
-    _sign_in_user(user, pw)
+    register_response = _register_user(user, pw)
+    if not register_response == dict(status='Ok'):
+        # Uninteresting username
+        return
 
     if is_safe_username(user):
         response = hug.test.post(
