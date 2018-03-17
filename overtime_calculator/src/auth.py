@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import Mapping
 
@@ -44,9 +43,12 @@ def signin_user(username: str, password: str):
     user_folder = get_user_folder(username)
     user_pw_file = user_folder / 'password.txt'
     if not user_pw_file.exists():
-        return {'error': 'Invalid credentials'}
+        return {'error': 'Invalid credentials.'}
 
     with user_pw_file.open(mode='rb') as f:
         hashed_password = f.readline()
-    if bcrypt.checkpw(str.encode(password), hashed_password):
-        return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
+    if not bcrypt.checkpw(str.encode(password), hashed_password):
+        return {'error': 'Invalid credentials.'}
+
+    # Password checked out:
+    return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
