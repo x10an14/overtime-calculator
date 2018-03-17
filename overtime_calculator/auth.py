@@ -1,9 +1,9 @@
-import bcrypt
-import jwt
 from pathlib import Path
 
-import hug
+import bcrypt
 from falcon import HTTP_401, HTTP_409, HTTP_201
+import hug
+import jwt
 
 from . import get_secret
 
@@ -23,7 +23,8 @@ def register_user(username: str, password: str, response=None):
         response.status = HTTP_409
         return {'error' : 'username already in use'}
 
-    hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
+    # 12 is default salt rounds
+    hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
     with user_pw_file.open(mode='wb') as f:
         f.write(hashed_password)
     response.status = HTTP_201

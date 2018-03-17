@@ -1,5 +1,4 @@
 import shutil
-import pytest
 
 import hug
 from falcon import HTTP_200, HTTP_409, HTTP_401, HTTP_201
