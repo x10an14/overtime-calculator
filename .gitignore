@@ -2,6 +2,9 @@
 data/
 users/
 
+# Pipenv lock-file
+Pipenv.lock
+
 # Flake8 logfile
 .flake8.log
 

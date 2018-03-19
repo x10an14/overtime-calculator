@@ -9,7 +9,7 @@ install: Pipfile
 	pipenv install --dev
 
 # TODO: Figure out how to add 'install'-rule as pre-requisite
-test: $(python_files)
+test: clean $(python_files)
 	pipenv run python -m coverage run -m py.test -v
 	pipenv run python -m coverage report -m
 
@@ -30,7 +30,7 @@ lock release: Pipfile
 	git add Pipfile.lock
 
 clean:
-	rm -rf .pytest_cache .hypothesis htmlcov
+	rm -rf .pytest_cache .hypothesis htmlcov data/*
 	# https://unix.stackexchange.com/a/115869:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} \;
 	find . -type f -regextype sed -regex ".*\.py[cod]" -exec rm {} \;
