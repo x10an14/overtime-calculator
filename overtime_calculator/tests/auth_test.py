@@ -4,12 +4,11 @@ from collections import namedtuple
 
 import hug
 import bcrypt
-from hypothesis import data
 from hypothesis import given
 from hypothesis import assume
-from hypothesis import composite
 from hypothesis import strategies as st
 from usernames import is_safe_username
+from usernames.validators import username_regex as _valid_username_regex
 
 from . import existing_usernames
 from overtime_calculator.src import api
@@ -19,19 +18,18 @@ from overtime_calculator.src.auth import get_user_folder
 User = namedtuple('User', ['handle', 'password'])
 # Ref:
 # https://github.com/theskumar/python-usernames/blob/master/usernames/validators.py#L9
-from usernames.validators import username_regex as _valid_username_regex
 VALID_USERNAME = st.from_regex(_valid_username_regex)
 VALID_PASSWORD = st.text(min_size=6)
 
 # List of existing users created
 _EXISTING_USERS = set()
 
-@composite
+
+@st.composite
 def new_user(draw, username=VALID_USERNAME, password=VALID_PASSWORD):
-    new_user =  User(handle=username, password=password)
+    new_user = User(handle=username, password=password)
     _EXISTING_USERS.append(new_user)
     return new_user
-
 
 
 def _register_user(user: str, pw: str):
@@ -41,7 +39,9 @@ def _register_user(user: str, pw: str):
         dict(username=user, password=pw),
     )
     if not is_safe_username(user):
-        assert response.data == dict(error='Illegal character/word in username, try another one.')
+        assert response.data == dict(
+            error='Illegal character/word in username, try another one.'
+        )
         return response.data
 
     # IMPORTANT:
@@ -55,7 +55,7 @@ def _register_user(user: str, pw: str):
     return response.data
 
 
-@given(data())
+@given(st.data())
 def test_signin(data):
     user = data.draw(
         VALID_USERNAME | st.sampled_from(new_user())
@@ -64,7 +64,7 @@ def test_signin(data):
         pw = data.draw(VALID_PASSWORD)
         register_response = _register_user(user, pw)
     else:
-
+        pass
 
     # First ensure sign-in:
     register_response = _register_user(user, pw)
@@ -76,7 +76,10 @@ def test_signin(data):
         dict(username=user, password=pw),
     )
     user_pw_file = get_user_folder(user) / 'password.txt'
-    if not bcrypt.checkpw(str.encode(pw), user_pw_file.open(mode='rb').readline()):
+    if not bcrypt.checkpw(
+        str.encode(pw),
+        user_pw_file.open(mode='rb').readline()
+    ):
         response.data = dict(error='Invalid credentials.')
         return
 
