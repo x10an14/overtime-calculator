@@ -68,6 +68,7 @@ CSV_FILES_FOLDER = Path("overtime_calculator") / 'tests' / 'data'
                 "Activity": "Egen kompetansebygging/kurs",
                 "Comment": "Opplæring/introduksjon",
                 "Reason for declining": "",
+                '': '',
             }])
     ])
 def test_valid_csv_files_parsing(file_name, expected):
@@ -75,14 +76,12 @@ def test_valid_csv_files_parsing(file_name, expected):
 
     assert(csv_file.resolve(strict=True))
     return_dicts = get_csv_file_content_as_dicts(
-        content=csv_file.read_text(),
+        content=csv_file.read_text(encoding='utf-8'),
         file_name=file_name,
     )
 
-    # compare expected with returned:
-    # Make sure all in expected are present in return_dicts
-    assert(all(x in return_dicts for x in expected))
     assert(len(return_dicts) == len(expected))
+    assert(all(x in return_dicts for x in expected))
 
 
 @pytest.mark.parametrize("file_name", ["empty_file.csv"])
@@ -92,7 +91,7 @@ def test_empty_csv_file_parsing(file_name):
 
         assert(csv_file.resolve(strict=True))
         get_csv_file_content_as_dicts(
-            content=csv_file.read_text(),
+            content=csv_file.read_text(encoding='utf-8'),
             file_name=file_name,
         )
 
@@ -106,7 +105,7 @@ def test_no_header_csv_file_parsing(file_name):
         assert(csv_file.resolve(strict=True))
 
         get_csv_file_content_as_dicts(
-            content=csv_file.read_text(),
+            content=csv_file.read_text(encoding='utf-8'),
             file_name=file_name,
         )
 
@@ -120,7 +119,7 @@ def test_header_only_csv_file_parsing(file_name):
         assert(csv_file.resolve(strict=True))
 
         get_csv_file_content_as_dicts(
-            content=csv_file.read_text(),
+            content=csv_file.read_text(encoding='utf-8'),
             file_name=file_name
         )
 
