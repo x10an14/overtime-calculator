@@ -11,7 +11,7 @@ matrix:
       dist: xenial
       sudo: true
 install:
-  - pip install -U pip
+  - pip install -U pip==18.0
   - pip install pipenv
   - pipenv install --dev
 before_script:
