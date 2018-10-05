@@ -20,7 +20,7 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                     "Hours": "0.00",
                     "Income": "0.00",
                     "First Check-In": "28-11-2016 08:20:00",
-                    "Last Check-Out": "28-11-2016 08:20:00"
+                    "Last Check-Out": "28-11-2016 08:20:00",
                 },
                 {
                     "Start time": "31-08-2016",
@@ -28,7 +28,7 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                     "Hours": "7.00",
                     "Income": "0.00",
                     "First Check-In": "31-08-2016 10:00:00",
-                    "Last Check-Out": "31-08-2016 17:00:00"
+                    "Last Check-Out": "31-08-2016 17:00:00",
                 },
                 {
                     "Start time": "06-10-2016",
@@ -36,7 +36,7 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                     "Hours": "6.67",
                     "Income": "0.00",
                     "First Check-In": "07-10-2016 08:45:00",
-                    "Last Check-Out": "07-10-2016 15:25:00"
+                    "Last Check-Out": "07-10-2016 15:25:00",
                 },
                 {
                     "Start time": "05-10-2016",
@@ -44,7 +44,7 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                     "Hours": "8.08",
                     "Income": "0.00",
                     "First Check-In": "06-10-2016 08:15:00",
-                    "Last Check-Out": "06-10-2016 16:20:00"
+                    "Last Check-Out": "06-10-2016 16:20:00",
                 },
                 {
                     "Start time": "04-10-2016",
@@ -52,7 +52,7 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                     "Hours": "7.50",
                     "Income": "0.00",
                     "First Check-In": "04-10-2016 09:10:00",
-                    "Last Check-Out": "04-10-2016 16:40:00"
+                    "Last Check-Out": "04-10-2016 16:40:00",
                 }]),
         ("header_and_one_row.csv",
             [{
@@ -62,13 +62,12 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
                 "From": "00:00",
                 "To": "06:30",
                 "Break": "",
-                "": "",
                 "Duration": "06:30",
                 "Project": "meh",
                 "Project no.": "lol",
                 "Activity": "Egen kompetansebygging/kurs",
                 "Comment": "Opplæring/introduksjon",
-                "Reason for declining": ""
+                "Reason for declining": "",
             }])
     ])
 def test_valid_csv_files_parsing(file_name, expected):
