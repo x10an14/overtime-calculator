@@ -13,6 +13,9 @@ test: $(python_files)
 	pipenv run python -m coverage run -m py.test
 	pipenv run python -m coverage report -m
 
+check_for_dead_code:
+	pipenv run vulture ./overtime_calculator
+
 html_test_report: test
 	pipenv run python -m coverage html
 

@@ -1,26 +1,20 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 hug = "*"
 hypothesis = "*"
 "flake8" = "*"
 bcrypt = "*"
 pyjwt = "*"
 
-
 [dev-packages]
-
 coveralls = "*"
+vulture = "*"
 ipython = "*"
 pytest = "*"
 
-
 [requires]
-
 python_version = "3.7"
