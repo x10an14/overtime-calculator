@@ -1,13 +1,19 @@
-import hug
 import shutil
 import pytest
+
+import hug
 
 from overtime_calculator.src import api
 from overtime_calculator.src.auth import get_user_folder
 
 
 def test_register():
-    response = hug.test.post(api, '/register', {'username': 'test_1', 'password': 'test_1'})
+    user_name = 'test1'
+    response = hug.test.post(
+        api,
+        '/register',
+        {'username': user_name, 'password': user_name},
+    )
     assert response.data == {'status': 'ok'}
 
 def test_signin():
