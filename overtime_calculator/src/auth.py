@@ -1,9 +1,7 @@
 import hug
 import bcrypt
 import jwt
-import os
 from pathlib import Path
-from typing import Mapping
 
 from . import get_secret
 from . import token_verify

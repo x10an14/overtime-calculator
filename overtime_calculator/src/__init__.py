@@ -1,6 +1,4 @@
-from contextlib import ContextDecorator
-from datetime import datetime
-from datetime import timedelta
+from functools import wraps
 import logging
 
 
@@ -26,7 +24,6 @@ def log_function_entry_and_exit(decorated_function):
     Logging entry + exit (as logging.info),
     and parameters (as logging.debug) of functions.
     '''
-    from functools import wraps
 
     @wraps(decorated_function)
     def wrapper(*dec_fn_args, **dec_fn_kwargs):
@@ -51,23 +48,3 @@ def log_function_entry_and_exit(decorated_function):
 
         return out
     return wrapper
-
-
-class TrackEntryAndExit(ContextDecorator):
-    '''
-    A context manager and function decorator in-one for logging(!).
-
-    See https://docs.python.org/3/library/contextlib.html#using-a-context-manager-as-a-function-decorator
-    '''
-
-    def __init__(self, name):
-        '''Why is this doc-string required?...'''
-        self.name = name
-
-    def __enter__(self):
-        '''Why is this doc-string required?...'''
-        logging.info(_get_current_time_string() + f"Entering: {self.name}")
-
-    def __exit__(self, exc_type, exc, exc_tb):
-        '''Why is this doc-string required?...'''
-        logging.info(_get_current_time_string() + f"Exiting: {self.name}")

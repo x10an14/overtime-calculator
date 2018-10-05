@@ -7,7 +7,13 @@ from . import log_function_entry_and_exit
 
 
 @log_function_entry_and_exit
-def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile_func=None):
+def get_csv_file_content_as_dicts(
+    content,
+    file_name,
+    *,
+    encoding='utf-8',
+    tempfile_func=None,
+):
     """Function for sniffing CSV dialect and returning content as list of dicts per row."""
     if tempfile_func is None:
         from tempfile import SpooledTemporaryFile
@@ -23,7 +29,9 @@ def get_csv_file_content_as_dicts(content, file_name, encoding='utf-8', tempfile
 
     with SpooledTemporaryFile(
             file_length,
-            mode="rw") as f:
+            mode="rw",
+            encoding=encoding,
+    ) as f:
         # save content to temporary file in memory (not disk)
         length = f.write(content)
         assert length == file_length
