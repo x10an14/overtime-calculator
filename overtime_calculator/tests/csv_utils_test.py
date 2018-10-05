@@ -1,4 +1,4 @@
-from os import path as op
+from pathlib import Path
 
 # PIP import(s):
 import pytest
@@ -6,7 +6,7 @@ import pytest
 # Module import(s):
 from overtime_calculator.src.csv_utils import get_csv_file_content_as_dicts
 
-CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
+CSV_FILES_FOLDER = Path("overtime_calculator") / 'tests' / 'data'
 
 
 @pytest.mark.parametrize(
@@ -71,28 +71,30 @@ CSV_FILES_FOLDER = op.join("overtime_calculator", "tests", "data")
             }])
     ])
 def test_valid_csv_files_parsing(file_name, expected):
-    with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
-        return_dicts = get_csv_file_content_as_dicts(
-            content=f.read(), file_name=file_name)
+    csv_file = Path(CSV_FILES_FOLDER) / file_name
+
+    assert(csv_file.resolve(strict=True))
+    return_dicts = get_csv_file_content_as_dicts(
+        content=csv_file.read_text(),
+        file_name=file_name,
+    )
 
     # compare expected with returned:
-    for x in expected:
-        # Make sure all in expected are present in return_dicts
-        assert x in return_dicts
-
-    # compare returned with expected
-    for x in return_dicts:
-        # Make sure all in return_dicts are present in expected
-        assert x in expected
+    # Make sure all in expected are present in return_dicts
+    assert(all(x in return_dicts for x in expected))
+    assert(len(return_dicts) == len(expected))
 
 
 @pytest.mark.parametrize("file_name", ["empty_file.csv"])
 def test_empty_csv_file_parsing(file_name):
     with pytest.raises(EOFError) as exc:
+        csv_file = Path(CSV_FILES_FOLDER) / file_name
 
-        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
-            get_csv_file_content_as_dicts(
-                content=f.read(), file_name=file_name)
+        assert(csv_file.resolve(strict=True))
+        get_csv_file_content_as_dicts(
+            content=csv_file.read_text(),
+            file_name=file_name,
+        )
 
         assert exc.message == "File '{}' received is empty".format(file_name)
 
@@ -100,22 +102,28 @@ def test_empty_csv_file_parsing(file_name):
 @pytest.mark.parametrize("file_name", ["three_rows_no_header.csv"])
 def test_no_header_csv_file_parsing(file_name):
     with pytest.raises(NotImplementedError) as exc:
+        csv_file = Path(CSV_FILES_FOLDER) / file_name
+        assert(csv_file.resolve(strict=True))
 
-        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
-            get_csv_file_content_as_dicts(
-                content=f.read(), file_name=file_name)
+        get_csv_file_content_as_dicts(
+            content=csv_file.read_text(),
+            file_name=file_name,
+        )
 
-        assert exc.message == "CSV file {} has no CSV header!".format(file_name)
+        assert exc.message == f"CSV file {file_name} has no CSV header!"
 
 
 @pytest.mark.parametrize("file_name", ["header_only.csv"])
 def test_header_only_csv_file_parsing(file_name):
     with pytest.raises(NotImplementedError) as exc:
+        csv_file = Path(CSV_FILES_FOLDER) / file_name
+        assert(csv_file.resolve(strict=True))
 
-        with open(op.join(CSV_FILES_FOLDER, file_name), "r") as f:
-            get_csv_file_content_as_dicts(
-                content=f.read(), file_name=file_name)
+        get_csv_file_content_as_dicts(
+            content=csv_file.read_text(),
+            file_name=file_name
+        )
 
-        message = "Only one row found in {}! ".format(file_name)
+        message = f"Only one row found in {file_name}! "
         message += "Need header row + data rows!"
         assert exc.message == message
