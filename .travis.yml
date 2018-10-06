@@ -12,8 +12,8 @@ matrix:
       sudo: true
 install:
   - pip install -U pip==18.0
-  - pip install pipenv
-  - pipenv install --dev
+  - pip install pipenv --verbose --ignore-pipfile
+  - pipenv install --dev --verbose --ignore-pipfile
 before_script:
   - make clean
 script:
