@@ -28,10 +28,6 @@ check_pep8: $(python_files)
 start_api: $(python_files)
 	pipenv run hug -f overtime_calculator/src/api.py
 
-.PHONY: pre_release
-pre_release: Pipfile
-	pipenv lock --pre
-
 .PHONY: release lock
 lock release: Pipfile
 	pipenv lock

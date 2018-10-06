@@ -2,6 +2,7 @@ import shutil
 import pytest
 
 import hug
+from falcon import HTTP_200, HTTP_409, HTTP_401
 
 from overtime_calculator.src import api
 from overtime_calculator.src.auth import get_user_folder
@@ -16,6 +17,7 @@ def test_registration_of_new_user():
         '/register',
         {'username': EXISTING_USER, 'password': EXISTING_USER},
     )
+    assert(response.status == HTTP_200)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert response.data == {'status': 'ok'}
 
@@ -26,6 +28,8 @@ def test_second_registration_of_registered_user():
         '/register',
         {'username': EXISTING_USER, 'password': EXISTING_USER},
     )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_409)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert response.data == dict(error='username already in use')
 
@@ -36,8 +40,34 @@ def test_sign_in_of_existing_user():
         '/signin',
         {'username': EXISTING_USER, 'password': EXISTING_USER}
     )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_200)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert 'token' in response.data and response.data['token']
+
+
+def test_sign_in_of_non_existing_user():
+    response = hug.test.post(
+        api,
+        '/signin',
+        {'username': 'Yoyo', 'password': EXISTING_USER}
+    )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_401)
+    print(response.data)    # Will only show if test fails and is run with --verbose (-v)
+    assert response.data == dict(error='Invalid credentials')
+
+
+def test_sign_in_of_wrong_pw():
+    response = hug.test.post(
+        api,
+        '/signin',
+        {'username': EXISTING_USER, 'password': 'yoyo'}
+    )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_401)
+    print(response.data)    # Will only show if test fails and is run with --verbose (-v)
+    assert response.data == dict(error='Invalid credentials')
 
 
 def teardown_module():
