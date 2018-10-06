@@ -34,7 +34,7 @@ def register_user(username: str, password: str, response=None):
     return {'status' : 'ok'}
 
 
-@hug.post('/signin')
+@hug.post('/signin', requires=token_key_authentication)
 def signin_user(username: str, password: str, response=None):
     secret = get_secret()
     user_folder = get_user_folder(username)
