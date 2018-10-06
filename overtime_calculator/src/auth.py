@@ -45,5 +45,7 @@ def signin_user(username: str, password: str, response=None):
 
     with user_pw_file.open(mode='rb') as f:
         hashed_password = f.readline()
-    if bcrypt.checkpw(str.encode(password), hashed_password):
-        return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
+    if not bcrypt.checkpw(str.encode(password), hashed_password):
+        response.status = HTTP_401
+        return {'error': 'Invalid credentials'}
+    return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
