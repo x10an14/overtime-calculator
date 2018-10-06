@@ -9,10 +9,6 @@ from . import get_secret
 from . import token_verify
 
 
-# This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
-token_key_authentication = hug.authentication.token(token_verify)
-
-
 def get_user_folder(username: str) -> Path:
     user_folder = Path('.') / 'data' / 'users' / username
     if not user_folder.exists():
