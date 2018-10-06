@@ -9,6 +9,7 @@ from overtime_calculator.auth import get_user_folder
 
 EXISTING_USER = 'test1'
 
+
 def setup_module():
     response = hug.test.post(
         api_or_module=api,
