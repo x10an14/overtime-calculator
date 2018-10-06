@@ -3,14 +3,10 @@ import jwt
 from pathlib import Path
 
 import hug
-from falcon import HTTP_401, HTTP_409
+from falcon import HTTP_401, HTTP_409, HTTP_201
 
 from . import get_secret
 from . import token_verify
-
-
-# This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
-token_key_authentication = hug.authentication.token(token_verify)
 
 
 def get_user_folder(username: str) -> Path:
@@ -31,6 +27,7 @@ def register_user(username: str, password: str, response=None):
     hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
     with user_pw_file.open(mode='wb') as f:
         f.write(hashed_password)
+    response.status = HTTP_201
     return {'status' : 'ok'}
 
 
@@ -48,4 +45,8 @@ def signin_user(username: str, password: str, response=None):
     if not bcrypt.checkpw(str.encode(password), hashed_password):
         response.status = HTTP_401
         return {'error': 'Invalid credentials'}
-    return {"token" : jwt.encode({'user': username}, secret, algorithm='HS256')}
+    return {"token" : jwt.encode(
+        {'user': username},
+        secret,
+        algorithm='HS256'
+    )}

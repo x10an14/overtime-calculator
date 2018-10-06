@@ -1,6 +1,7 @@
 from functools import wraps
 import logging
 
+import jwt
 
 default_parse_fmt = "%d-%m-%Y %H:%M:%S"
 
