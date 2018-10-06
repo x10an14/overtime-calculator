@@ -2,6 +2,7 @@ import shutil
 import pytest
 
 import hug
+from falcon import HTTP_200, HTTP_409
 
 from overtime_calculator.src import api
 from overtime_calculator.src.auth import get_user_folder
@@ -16,6 +17,7 @@ def test_registration_of_new_user():
         '/register',
         {'username': EXISTING_USER, 'password': EXISTING_USER},
     )
+    assert(response.status == HTTP_200)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert response.data == {'status': 'ok'}
 
@@ -26,6 +28,8 @@ def test_second_registration_of_registered_user():
         '/register',
         {'username': EXISTING_USER, 'password': EXISTING_USER},
     )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_409)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert response.data == dict(error='username already in use')
 
@@ -36,6 +40,8 @@ def test_sign_in_of_existing_user():
         '/signin',
         {'username': EXISTING_USER, 'password': EXISTING_USER}
     )
+    print(response.status)    # Will only show if test fails and is run with --verbose (-v)
+    assert(response.status == HTTP_200)
     print(response.data)    # Will only show if test fails and is run with --verbose (-v)
     assert 'token' in response.data and response.data['token']
 

@@ -1,7 +1,9 @@
-import hug
 import bcrypt
 import jwt
 from pathlib import Path
+
+import hug
+from falcon import HTTP_401, HTTP_409
 
 from . import get_secret
 from . import token_verify
@@ -19,10 +21,11 @@ def get_user_folder(username: str) -> Path:
 
 
 @hug.post('/register')
-def register_user(username: str, password: str):
+def register_user(username: str, password: str, response=None):
     user_folder = get_user_folder(username)
     user_pw_file = user_folder / 'password.txt'
     if user_pw_file.exists():
+        response.status = HTTP_409
         return {'error' : 'username already in use'}
 
     hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
@@ -32,11 +35,12 @@ def register_user(username: str, password: str):
 
 
 @hug.post('/signin')
-def signin_user(username: str, password: str):
+def signin_user(username: str, password: str, response=None):
     secret = get_secret()
     user_folder = get_user_folder(username)
     user_pw_file = user_folder / 'password.txt'
     if not user_pw_file.exists():
+        response.status = HTTP_401
         return {'error': 'Invalid credentials'}
 
     with user_pw_file.open(mode='rb') as f:
