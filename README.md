@@ -19,25 +19,15 @@ Hobby programming project, with the intent of simplifying overtime calculation(s
   * (Maybe do this in a separate NodeJS repo?)
 - [ ] Split out library logic
 
+### CLI
+
+* Run (just) tests: `pipenv run python -m pytest tests`
+  - py.test is used, and lies in `Pipfile`. Execute command from git repo root.
+* Run test Coverage: `make test` (Runs above test-command _and_ creates coverage report).
+* Open coverage report in browser: `pipenv run coverage html && <browser> htmlcov/index.html`
+  - Requires you to have run the equivalent of `python -m coverage report -m`, which `make test` does.
+
 ### Tests:
 The tests are composed by with the Hypothesis framework, and run with [py.test](https://github.com/pytest-dev/pytest).
 The tests should lie in the `tests/` folder inside the git repo.
 Any data used for integration testing lies inside `tests/data/`.
-
-__NB!!!__: All below test-commands should be executed in root of git repo!
-
-##### Run (just) tests:
-py.test is used, and lies in `Pipfile`.
-To execute, run the below command from the root of the git repo:
-`pipenv run python -m pytest tests`
-
-##### Run test Coverage:
-Coverage is used, and included in `Pipfile`.
-See below for how to use:
-`pipenv run coverage run setup.py test`
-
-###### To get Coverage report:
-`pipenv run coverage html`
-
-To open HTML up in Google Chrome from terminal:
-`google-chrome htmlcov/index.html`
