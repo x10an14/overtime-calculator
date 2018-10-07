@@ -4,8 +4,8 @@ import hug
 import pytest
 from falcon import HTTP_201, HTTP_200
 
-from overtime_calculator.src import api
-from overtime_calculator.src.auth import get_user_folder
+from overtime_calculator import api
+from overtime_calculator.auth import get_user_folder
 
 EXISTING_USER = 'test1'
 

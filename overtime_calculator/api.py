@@ -1,7 +1,6 @@
 import hug
 
-from . import token_verify
-from overtime_calculator.src import auth
+from overtime_calculator import auth, token_verify
 
 
 # This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)

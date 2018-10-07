@@ -4,8 +4,8 @@ import pytest
 import hug
 from falcon import HTTP_200, HTTP_409, HTTP_401, HTTP_201
 
-from overtime_calculator.src import api
-from overtime_calculator.src.auth import get_user_folder
+from overtime_calculator import api
+from overtime_calculator.auth import get_user_folder
 
 EXISTING_USER = 'test1'
 UNREGISTERED_USER = 'test2'
