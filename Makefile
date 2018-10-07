@@ -16,7 +16,7 @@ test: $(python_files)
 
 .PHONY: dead_code
 dead_code:
-	pipenv run vulture ./overtime_calculator
+	pipenv run vulture --min-confidence 100 overtime_calculator tests
 
 .PHONY: html_test_report
 html_test_report: test
