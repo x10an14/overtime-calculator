@@ -18,6 +18,7 @@ def with_other_apis():
         api
     ]
 
+
 if __name__ == '__main__':
     _file = pathlib.Path(sys.argv[0])
     module = _file.parent.name

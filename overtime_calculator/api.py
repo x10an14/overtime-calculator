@@ -1,6 +1,6 @@
 import hug
 
-from overtime_calculator import auth, token_verify
+from overtime_calculator import auth
 
 
 def _hello_user(user_name: str):

@@ -5,7 +5,7 @@ from falcon import HTTP_401, HTTP_409, HTTP_201
 import hug
 import jwt
 
-from . import get_secret
+from . import get_secret, token_verify
 
 
 # This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
