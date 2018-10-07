@@ -1,6 +1,8 @@
 """Module containing majory of calulation functions and their helpers."""
 from datetime import datetime
 from datetime import timedelta
+from collections import defaultdict
+
 from . import default_parse_fmt
 from . import log_function_entry_and_exit
 
@@ -36,31 +38,21 @@ def parse_row(row, field_names, datetime_parse_fmt=default_parse_fmt, has_durati
 @log_function_entry_and_exit
 def parse_csv_reader_content(input_data, **kwargs):
     # TODO: ADD DOCSTRING
-    def help_func(nested_obj, week, day, new_val):
-        try:
-            nested_obj[week][day].append(new_val)
-        except KeyError as e:
-            if e.args[0] == week:
-                # if it's the first time we visit this week
-                nested_obj[week] = dict()
-                nested_obj[week][day] = [new_val]
-            if e.args[0] == day:
-                # If it's the first day we visit this day of this week
-                nested_obj[week][day] = [new_val]
 
-    total_sum = timedelta(0)
-    aggregate_records = dict()
+    total_sum, aggregate_records = timedelta(0), defaultdict(dict)
     for row in input_data:
         (duration, (_, week_nr, week_day)) = parse_row(row, **kwargs)
 
         t = datetime.strptime(duration, "%H:%M")
         total_sum += timedelta(hours=t.hour, minutes=t.minute)
 
-        help_func(
-            nested_obj=aggregate_records,
-            week=week_nr,
-            day=week_day,
-            new_val=duration)
+        if week_nr not in aggregate_records:
+            aggregate_records[week_nr] = defaultdict(list)
+
+        if week_day not in aggregate_records[week_nr]:
+            aggregate_records[week_nr][week_day] = [duration]
+        else:
+            aggregate_records[week_nr][week_day].append(duration)
 
     # add total amount of seconds to return object
     aggregate_records["total_sum"] = int(total_sum.total_seconds())
@@ -83,8 +75,10 @@ def parse_aggregate_weeks_and_weekdays(aggregate_data, hours_per_week=37.5):
 
         week_sum = timedelta(0)
         for day, records in days.items():
-            for record in records:
-                week_sum += get_timedelta_from_str(record)
+            week_sum += sum(
+                get_timedelta_from_str(record)
+                for record in records
+            )
         week_balance = week_sum - hours_per_week
 
         aggregate_data[week]["sum"] = int(week_sum.total_seconds())

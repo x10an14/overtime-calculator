@@ -1,5 +1,6 @@
 python_files := $(shell find overtime_calculator/ tests/ -type f -name '*.py')
 
+.PHONY: all
 all: install html_test_report
 
 .PHONY: install
@@ -13,8 +14,9 @@ test: $(python_files)
 	pipenv run python -m coverage run -m py.test
 	pipenv run python -m coverage report -m
 
-check_for_dead_code:
-	pipenv run vulture ./overtime_calculator ./tests
+.PHONY: dead_code
+dead_code:
+	pipenv run vulture ./overtime_calculator
 
 .PHONY: html_test_report
 html_test_report: test
@@ -28,14 +30,14 @@ check_pep8: $(python_files)
 start_api: $(python_files)
 	pipenv run hug --file ./overtime_calculator/__main__.py
 
-.PHONY: release lock
+.PHONY: lock release
 lock release: Pipfile
 	pipenv lock
 	git add Pipfile.lock
 
 .PHONY: clean
 clean:
-	rm -rf .pytest_cache .hypothesis htmlcov .coverage
+	rm -rf .pytest_cache .hypothesis htmlcov .coverage data/*
 	# https://unix.stackexchange.com/a/115869:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} \;
 	find . -type f -regextype sed -regex ".*\.py[cod]" -exec rm {} \;

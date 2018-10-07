@@ -19,5 +19,6 @@ before_script:
 script:
   # Full test suite, incl. coverage
   - make test
+  - make check_pep8
 after_script:
   - coveralls

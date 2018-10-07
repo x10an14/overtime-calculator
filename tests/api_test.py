@@ -1,13 +1,13 @@
 import shutil
 
 import hug
-import pytest
 from falcon import HTTP_201, HTTP_200, HTTP_401
 
 from overtime_calculator import api
 from overtime_calculator.auth import get_user_folder
 
 EXISTING_USER = 'test1'
+
 
 def setup_module():
     response = hug.test.post(
@@ -35,6 +35,7 @@ def test_hello_user():
     )
     assert(hello_user.status == HTTP_200)
     assert(hello_user.data == api._hello_user(EXISTING_USER))
+
 
 def test_hello_invalid_token():
     login = hug.test.post(

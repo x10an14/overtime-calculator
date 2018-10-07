@@ -1,11 +1,15 @@
-import bcrypt
-import jwt
 from pathlib import Path
 
-import hug
+import bcrypt
 from falcon import HTTP_401, HTTP_409, HTTP_201
+import hug
+import jwt
 
-from . import get_secret
+from . import get_secret, token_verify
+
+
+# This is used in protected api paths. Ex: hug.get('/protected', requires=auth.token_key_authentication)
+token_key_authentication = hug.authentication.token(token_verify)
 
 
 def get_user_folder(username: str) -> Path:
@@ -21,13 +25,14 @@ def register_user(username: str, password: str, response=None):
     user_pw_file = user_folder / 'password.txt'
     if user_pw_file.exists():
         response.status = HTTP_409
-        return {'error' : 'username already in use'}
+        return {'error': 'username already in use'}
 
-    hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()) # 12 is default salt rounds
+    # 12 is default salt rounds
+    hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
     with user_pw_file.open(mode='wb') as f:
         f.write(hashed_password)
     response.status = HTTP_201
-    return {'status' : 'ok'}
+    return {'status': 'ok'}
 
 
 @hug.post('/signin')
@@ -44,8 +49,10 @@ def signin_user(username: str, password: str, response=None):
     if not bcrypt.checkpw(str.encode(password), hashed_password):
         response.status = HTTP_401
         return {'error': 'Invalid credentials'}
-    return {"token" : jwt.encode(
-        {'user': username},
-        secret,
-        algorithm='HS256'
-    )}
+    return {
+        "token": jwt.encode(
+            {'user': username},
+            secret,
+            algorithm='HS256'
+        )
+    }
