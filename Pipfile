@@ -5,12 +5,12 @@ name = "pypi"
 
 [packages]
 hug = "*"
-hypothesis = "*"
-"flake8" = "*"
 bcrypt = "*"
 pyjwt = "*"
 
 [dev-packages]
+"flake8" = "*"
+hypothesis = "*"
 coveralls = "*"
 vulture = "*"
 ipython = "*"
