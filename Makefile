@@ -22,7 +22,7 @@ html_test_report: test
 
 .PHONY: check_pep8
 check_pep8: $(python_files)
-	pipenv run python -m flake8 overtime_calculator
+	pipenv run python -m flake8
 
 .PHONY: start_api
 start_api: $(python_files)
