@@ -1,3 +1,6 @@
+import sys
+import pathlib
+
 import hug
 
 from overtime_calculator import auth, api
@@ -14,3 +17,12 @@ def with_other_apis():
         auth,
         api
     ]
+
+if __name__ == '__main__':
+    _file = pathlib.Path(sys.argv[0])
+    module = _file.parent.name
+    print(
+        f"Start {module} with Hug, like so: hug --file {_file}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
