@@ -1,6 +1,6 @@
 # Overtime-Calculator
 [![Build Status](https://travis-ci.org/x10an14/overtime-calculator.svg?branch=master)](https://travis-ci.org/x10an14/overtime-calculator)
-[![Coverage Status](https://coveralls.io/repos/github/x10an14/overtime-calculator/badge.svg?branch=ci-add-coveralls)](https://coveralls.io/github/x10an14/overtime-calculator?branch=ci-add-coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/x10an14/overtime-calculator/badge.svg?branch=master)](https://coveralls.io/github/x10an14/overtime-calculator?branch=master)
 
 Hobby programming project, with the intent of simplifying overtime calculation(s).
 
