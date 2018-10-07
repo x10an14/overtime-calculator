@@ -20,5 +20,6 @@ script:
   # Full test suite, incl. coverage
   - make test
   - make check_pep8
+  - make dead_code
 after_script:
   - coveralls
