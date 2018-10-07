@@ -14,12 +14,15 @@
 #
 import sys
 import pathlib
-sys.path.insert(
-    0,
-    str(
-        (pathlib.Path('..') / '..' / 'overtime_calculator').resolve(strict=True)
-    )
-)
+import json
+
+
+package = pathlib.Path('..') / '..'
+package = package.resolve(strict=True)
+assert(package.is_dir())
+assert((package / 'overtime_calculator') in list(package.iterdir()))
+if str(package) not in sys.path:
+    sys.path.insert(0, str(package))
 
 
 
@@ -99,7 +102,7 @@ html_theme = 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = [] # ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
