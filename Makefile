@@ -35,6 +35,10 @@ lock release: Pipfile
 	pipenv lock
 	git add Pipfile.lock
 
+.PHONY: html_docs
+html_docs:
+	pipenv run python overtime_calculator/setup.py build_sphinx
+
 .PHONY: clean
 clean:
 	rm -rf .pytest_cache .hypothesis htmlcov .coverage data/*
