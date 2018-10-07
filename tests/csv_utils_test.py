@@ -4,9 +4,9 @@ from pathlib import Path
 import pytest
 
 # Module import(s):
-from overtime_calculator.src.csv_utils import get_csv_file_content_as_dicts
+from overtime_calculator.csv_utils import get_csv_file_content_as_dicts
 
-CSV_FILES_FOLDER = Path("overtime_calculator") / 'tests' / 'data'
+CSV_FILES_FOLDER = Path("tests") / 'data'
 
 
 @pytest.mark.parametrize(

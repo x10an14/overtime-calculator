@@ -10,7 +10,7 @@ from src.calculations import parse_csv_reader_content
 from src.calculations import parse_aggregate_weeks_and_weekdays
 
 
-CSV_FILES_FOLDER = op.join("tests", "data")
+CSV_FILES_FOLDER = op.join("data")
 
 
 @pytest.mark.parametrize(

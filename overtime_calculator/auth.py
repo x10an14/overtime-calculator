@@ -6,7 +6,6 @@ import hug
 from falcon import HTTP_401, HTTP_409, HTTP_201
 
 from . import get_secret
-from . import token_verify
 
 
 def get_user_folder(username: str) -> Path:
