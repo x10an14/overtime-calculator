@@ -5,7 +5,7 @@ Source: https://gist.github.com/toast38coza/2d7ac99cc6ed9332508b7a597c8c7bd7
 Whose source in turn was: https://httpstatuses.com/
 """
 
-STATUS_CODES = {
+STATUS_CODES = {            # pragma: no cover
     100: "100 Continue",
     101: "101 Switching Protocols",
     102: "102 Processing",
